@@ -19,12 +19,12 @@ export default {
       dest: pkg['main'],
       format: 'umd',
       moduleName: 'rollupStarterProject',
-      sourceMap: true
+      sourceMap: false
     },
     {
       dest: pkg['jsnext:main'],
       format: 'es',
-      sourceMap: true
+      sourceMap: false
     }
   ]
 };
