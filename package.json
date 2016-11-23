@@ -1,9 +1,12 @@
 {
-  "name": "micro-stream",
+  "name": "micro-stream-api",
+  "version": "0.1.3",
+  "description": "MicroStream JS Api Website (hosted on github.io)",
+  "main": "index.html",
   "scripts": {
-    "stylelint": "stylelint"
+    "test": "echo \"This is the webpage... You might want the master branch.\""
   },
-  "dependencies": {
-    "stylelint": "^7.6.0"
-  }
+  "author": "Michael Rosata",
+  "license": "MIT",
+  "homepage": "https://mrosata.github.io/micro-stream"
 }

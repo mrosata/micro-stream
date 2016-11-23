@@ -1,9 +1,3 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.microStream = factory());
-}(this, (function () { 'use strict';
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
@@ -222,7 +216,5 @@ if (!(__cov_FyQeXu2t2z1yJ5HdXuoxmg['/home/michael/projects/bin/micro-stream/lib/
 }
 __cov_FyQeXu2t2z1yJ5HdXuoxmg = __cov_FyQeXu2t2z1yJ5HdXuoxmg['/home/michael/projects/bin/micro-stream/lib/index.js'];
 
-return Stream;
-
-})));
-//# sourceMappingURL=micro-stream.js.map
+export default Stream;
+//# sourceMappingURL=micro-stream.mjs.map
