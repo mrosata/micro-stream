@@ -1,214 +1,435 @@
+<!DOCTYPE html><head><title>Micro-Stream JS</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Open+Sans"><link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"><style>html, button, input, select, textarea, .pure-g [class *= "pure-u"] {
+  /* Set your content font stack here: */
+  font-family: 'Lato', sans-serif;
+}
+.lato {
+  font-family: 'Lato', sans-serif;
+}
+.open-sans {
+  font-family: 'Open Sans', sans-serif;
+}
+</style><style type="text/css">/* http://prismjs.com/download.html?themes=prism-okaidia&languages=markup+css+clike+javascript&plugins=highlight-keywords */
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Micro-Stream JS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Open+Sans">
-  <link rel="stylesheet" href="./app/styles/purecss.io.min.css">
-  <style>html, button, input, select, textarea, .pure-g [class *= "pure-u"] {
-    /* Set your content font stack here: */
-    font-family: 'Lato', sans-serif;
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: .5em 0;
+  overflow: auto;
+  border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #272822;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: slategray;
+}
+
+.token.punctuation {
+  color: #f8f8f2;
+}
+
+.namespace {
+  opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+  color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #e6db74;
+}
+
+.token.keyword {
+  color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+  color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+</style><style type="text/css">html,
+body {
+  height: 100%;
+}
+body {
+  color: #333;
+}
+.pure-menu-link,
+[data-action],
+.button {
+  cursor: pointer;
+}
+.logo.light {
+  color: #f8faf8;
+}
+a {
+  color: #1b98f8;
+  text-decoration: none;
+}
+.api-label {
+  text-decoration: underline;
+  font-weight: 700;
+}
+p {
+  text-indent: 20px;
+  text-indent: 1.25rem;
+}
+.primary-button,
+.secondary-button {
+  border-radius: 20px;
+  box-shadow: none;
+}
+.primary-button {
+  margin: 1em 0;
+  background: #1b98f8;
+  color: #fff;
+}
+.secondary-button {
+  padding: 0.5em 2em;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #666;
+  font-size: 80%;
+}
+#layout,
+#nav,
+#list,
+#main {
+  margin: 0;
+  padding: 0;
+}
+#nav {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  background: #252a3a;
+  text-align: center;
+}
+#nav .nav-menu-button {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  display: block;
+}
+#nav.active {
+  height: 80%;
+}
+.nav-inner {
+  display: none;
+}
+#nav.active .nav-inner {
+  display: block;
+  padding: 2em 0;
+}
+#nav .pure-menu {
+  border: none;
+  background: transparent;
+  text-align: left;
+}
+#nav .pure-menu-link:hover,
+#nav .pure-menu-link:focus {
+  background: #373c5a;
+}
+#nav .pure-menu-link {
+  margin-left: 0.5em;
+  color: #fff;
+}
+#nav .pure-menu-heading {
+  border-bottom: none;
+  color: #4b7197;
+  font-size: 110%;
+}
+.email-count {
+  color: #4b7197;
+}
+.email-label-personal,
+.email-label-work,
+.email-label-travel {
+  display: inline-block;
+  margin-right: 0.5em;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+}
+.email-label-personal {
+  background: #ffc94c;
+}
+.email-label-work {
+  background: #41ccb4;
+}
+.email-label-travel {
+  background: #40c365;
+}
+.item {
+  padding: 0.9em 1em;
+  border-bottom: 1px solid #ddd;
+  border-left: 6px solid transparent;
+}
+.stream-info {
+  margin-right: 0.5em;
+  border-radius: 3px;
+}
+.news-title,
+.news-subject {
+  margin: 0;
+}
+.news-title {
+  color: #999;
+  text-transform: uppercase;
+}
+.news-desc {
+  margin: 0.4em 0;
+  font-size: 80%;
+}
+.item-selected {
+  background: #eee;
+}
+.item-unread {
+  border-left: 6px solid #1b98f8;
+}
+.demo-content-header,
+.demo-content-footer {
+  padding: 0 0 0 16px;
+  padding: 0 0 0 1rem;
+}
+.demo-content-body {
+  padding: 8px 16px;
+  padding: 0.5rem 1rem;
+}
+.demo-content-body .inner-content {
+  margin: auto;
+  max-width: 1000px;
+  width: 100%;
+}
+.demo-content-header {
+  border-bottom: 1px solid #ddd;
+}
+.demo-content-title {
+  margin: 0.5em 0 0;
+}
+.demo-content-subtitle {
+  margin: 0;
+  font-weight: 400;
+  font-size: 1em;
+}
+.demo-content-subtitle span {
+  color: #999;
+}
+.demo-content-info {
+  margin-top: 0;
+  text-align: right;
+}
+.demo-content-info .secondary-button {
+  margin-bottom: 0.3em;
+}
+.stream-info {
+  width: 40px;
+  height: 40px;
+}
+@media (min-width: 40em) {
+  #layout {
+    /* "left col (nav + list)" width */
+    position: relative;
+    padding-left: 200px;
   }
-  .lato {
-    font-family: 'Lato', sans-serif;
+  #nav,
+  #list {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
   }
-  .open-sans {
-    font-family: 'Open Sans', sans-serif;
+  #nav {
+    margin-left: -200px;
+    /* "left col (nav + list)" width */
+    width: 200px;
+    height: 100%;
   }
-  </style>
-  <link rel="stylesheet" href="./app/styles/prism.css">
-  <link rel="stylesheet" href="./app/styles/main.css">
-</head>
-<body id="app">
-<div class="content pure-g" id="layout">
-  <div class="pure-u" id="nav"><a class="nav-menu-button" href="#">Menu</a>
-    <div class="nav-inner" data-template="menu">
-      <h3><span class="logo light">MicroStreamJS</span></h3>
-      <div class="pure-menu">
+  .nav-inner {
+    display: block;
+    padding: 2em 0;
+  }
+  #nav .nav-menu-button {
+    display: none;
+  }
+  #main {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 200px;
+    overflow: auto;
+  }
+}
+@media (max-width: 60em) {
+  #main {
+    width: auto;
+  }
+}
+@media (min-width: 60em) {
+  #list {
+    margin-left: -350px;
+    width: 350px;
+    height: 100%;
+    border-right: 1px solid #ddd;
+  }
+  #main {
+    position: static;
+    margin: 0;
+    padding: 0;
+  }
+}
+pre {
+  padding: 8px;
+  padding: 0.5rem;
+}
+pre code {
+  font-size: 16px;
+  font-size: 1rem;
+}
+.fail {
+  color: #f00;
+  font-weight: 700;
+}
+.pass {
+  color: #006400;
+  font-weight: 700;
+}
+span {
+  font-size: 16px;
+  font-size: 1rem;
+}
+span.sm {
+  font-size: 14.4px;
+  font-size: 0.9rem;
+}
+span.md {
+  font-size: 16.8px;
+  font-size: 1.05rem;
+}
+span.lg {
+  font-size: 20px;
+  font-size: 1.25rem;
+}
+</style></head><body id="app"><div class="content pure-g" id="layout"><div class="pure-u" id="nav"><h3 class="logo light">Micro-Stream JS</h3><div class="nav-inner" data-template="menu"><div class="pure-menu"><ul class="pure-menu-list"><li class="pure-menu-item"><a class="pure-menu-link" href="#About">About</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#GettingStarted">GettingStarted</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#Streams">Streams</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#StreamObservers">Stream Observers</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#of">.of</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#fromEvent">.fromEvent</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#curried">.curried</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#curry">.curry</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#collect">.collect</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#subscribe">.subscribe</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#cancel">.cancel</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#Map">.map</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#Tap">.tap</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#Trap">.trap</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#Path">.path</a></li><li class="pure-menu-item"><a class="pure-menu-link" href="#Path">.filter</a></li></ul></div></div></div><div class="pure-u-1" id="main"><div class="demo-content"><div class="demo-content-header pure-g"><div class="pure-u-1-2"><h1 class="demo-content-title">Micro-Streams JS</h1><p class="demo-content-subtitle">1 Source<span>Unlimited Power</span></p></div><div class="demo-content-info pure-u-1-2"><div class="item item-unread pure-g"><div class="pure-u-1"><h5 class="news-title">Michael Rosata</h5><h4 class="news-subject">Lead Developer</h4><p class="news-desc">I like to eat, eat, eat, apples and bananas. I like to oat, oat oat, opples n banoo-noos
+</p></div></div></div></div><section class="demo-content-body"><div class="inner-content" data-template="api-docs"><div class="pure-g" id="about"><div class="pure-u-1"><div class="api-content"><h3 id="About">About Micro-Stream JS</h3><article><p>Micro-Stream JS is a bi-product of the "functional-reactive" revolution. Its goal is to introduce streams into applications without any of the other strings attached, (ie: hundreds  of utilities you don't want to learn or care to know, page bloat, with only 12.0kb gzipped, and that number is likely to change (hopefully down) by the time we go alpha), and it aims to lower the barrier of entry as far as thinking of logic more in terms of "how" and not "what"...<em>That part comes with time.</em></p>
+  <p>So what can a stream do? Let's discuss in terms of something ubiquitous in webapps... DOM "click" Events! Normally, you would setup a listener on the page (or on an element), and from there a function would handle every click. A stream can replace that listener, and the function that handles it, and maybe replace a few other listeners and functions at the same time. How? Let's walk and code a bit.</p></article><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword keyword-let">let</span> clickStream <span class="token operator">=</span> Stream<span class="token punctuation">.</span><span class="token function">fromEvent</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>evt <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">[</span><span class="token function">path</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">,</span> <span class="token string">'dataset'</span><span class="token punctuation">,</span> <span class="token string">'action'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> evt<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#Streams">Streams</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#StreamObservers">Stream Observers</a>
-          </li>
-        </ul>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#from">from</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#fromEvent">fromEvent</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#curried">curried</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#curry">curry</a>
-          </li>
-        </ul>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#Map">Map</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#Tap">Tap</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link" href="#Trap">Trap</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+clickStream<span class="token punctuation">.</span>subscribe<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">curry</span><span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> a <span class="token operator">*</span> b <span class="token operator">*</span> c<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span>subscribe<span class="token punctuation">.</span><span class="token function">tap</span><span class="token punctuation">(</span>alert<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span><span class="token comment" spellcheck="true">/* Still do something with val */</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><article>The marvelous thing about streams is that they can branch off into new streams midway through a pipeline, so whenever you have values that need to do 2 different things, just split the stream. All streams are cancellable, when a stream is cancelled, any steams subscribed to it, or subscribed to that streams subscribers, and on and on, are all cancelled as well. So you have very fine grain control over how long streams stay running, it's a trivial thing to shut down a few branches of a stream and leave another branch running strong!</article><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword keyword-let">let</span> event <span class="token operator">=</span> Stream<span class="token punctuation">.</span><span class="token function">fromEvent</span><span class="token punctuation">(</span><span class="token string">'keyup'</span><span class="token punctuation">,</span> <span class="token string">'.my-input'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token function">path</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">,</span> <span class="token string">'value'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token keyword keyword-return">return</span> val<span class="token punctuation">;</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// Until we subscribe, that message will never log</span></code></pre></div><div class="api-content"><h3 id="GettingStarted">Getting Started - Streams, your powerful data pipelines</h3><article></article><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword keyword-let">let</span> event <span class="token operator">=</span> Stream<span class="token punctuation">.</span><span class="token function">fromEvent</span><span class="token punctuation">(</span><span class="token string">'keyup'</span><span class="token punctuation">,</span> <span class="token string">'.my-input'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token function">path</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">,</span> <span class="token string">'value'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token keyword keyword-return">return</span> val<span class="token punctuation">;</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// Until we subscribe, that message will never log</span></code></pre></div></div></div><h1>API Docs</h1><div class="pure-g" id="api-docs"><div class="pure-u-1"><div class="api-content"><h3 id="Streams">Stream</h3><p><code>Stream</code> is the main class used in Micro-Stream JS. There are a few different types of Streams included in this package, but you never have to worry about explicitly asking for one type of stream or another, this main class has static methods useful for creating any of the powerful sub-classes available. The 4 different classes are: </p><p><span class="api-label"><code>Stream</code></span> - all other streams inherit from this main class. <code>StreamObserver</code> - when you subscribe to a stream this is usually what you get. </p><p><span class="api-label"><code>StreamObserver</code></span> is a <code>Stream</code> itself so it too can be subscribed too, which is how we can split the mighty streams.</p><p><span class="api-label"><code>IteratorStreamObserver</code></span> - The iterator stream uses powerful ES6 generators to put "back-pressure" on a stream, so all data that flows into the iterator can be worked with until finally some condition is met and whatever work the generator done is then passed down the stream. One powerful feature these streams provide us is the ability to simulate the behaviour of curried functions in the stream (IE: data comes down the stream, the first time it hits the iterator it is bound to argument 1 of a function, then the next time data hits the iterator it is bound to argument 2 and so on until BOOM! We run the total application of the function, push the data downstream and repeat. <em>I love this truley!</em></p><p><span class="api-label"><code>CollectorStreamObserver</code></span> - Hand in hand with the <code>IteratorStream</code></p>.<p></p><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword keyword-const">const</span> myStream <span class="token operator">=</span> Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token keyword keyword-function">function</span><span class="token punctuation">(</span>hook<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// ... Write some temporal logic (event handler, async callback, database socket)</span>
+  <span class="token comment" spellcheck="true">// ... use `hook` as the callback for your event/async/database/what-haves-yooz</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>hook<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></div><div class="api-content"><h3 id="StreamObservers">Stream Observers</h3><p>Imagine the stream <code>myStream</code> from the example above. If we wanted to do something with the data coming from an event, an async op, a database update, then we would simply subscribe to a stream and map functions on, sort of like with a Promise except a promise can't natively do some of the acrobatics that our streams can.</p><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword keyword-const">const</span> updatedValues <span class="token operator">=</span> myStream<span class="token punctuation">.</span>subscribe<span class="token punctuation">.</span><span class="token function">path</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">,</span> <span class="token string">'value'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// This observer uses `.path` to safely get `.target.value` from event.</span>
+<span class="token comment" spellcheck="true">// `.filter` by default prevents any undefined values from passing downstream</span>
+updatedValues<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token keyword keyword-function">function</span><span class="token punctuation">(</span>targetValue<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">/* Do work knowing you have a value */</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></div><div class="api-content"><h3 id="from">Stream.from</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="fromEvent">Stream.fromEvent</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="curried">.curried</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="curry">.curry</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="subscribe">.subscribe</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="cancel">.cancel</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="map">.map</h3><p>Map adds a function to the stream or the subscriber. Either way it becomes the next function in line and is passed the data from the previous function. If you get to a point in your stream where you'd like to map 2 different functions. Stop mapping to the current stream observer and instead subscribe to it and map off of that. This is analogous to if elsing.</p><pre class=" language-javascript"><code class=" language-javascript"><span class="token comment" spellcheck="true">// This is poor example. It forces stream to pass 100, then it multiplies by 100,</span>
+<span class="token comment" spellcheck="true">// then it will alert the value `10000`.</span>
+someStream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">&gt;</span> a <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>alert<span class="token punctuation">)</span></code></pre></div><div class="api-content"><h3 id="tap">.tap</h3><p>Same as map except that you aren't responsible for returning a value. This is good for inspecting values. You could do a console log and the Stream will pass you the value and then also pass it to the next function mapped to the stream. Below is an example of <code>tap</code> and then below it is the same exact code written with <code>map</code> instead.</p><pre class=" language-javascript"><code class=" language-javascript"><span class="token comment" spellcheck="true">// With tap</span>
+someStream<span class="token punctuation">.</span><span class="token function">tap</span><span class="token punctuation">(</span>console<span class="token punctuation">.</span>log<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>console<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-  <div class="pure-u-1" id="main">
-    <div class="demo-content">
-      <div class="demo-content-header pure-g">
-        <div class="pure-u-1-2">
-          <h1 class="demo-content-title">Micro-Streams JS</h1>
-          <p class="demo-content-subtitle"> 1 Source <span> Unlimited Power </span>
-          </p>
-        </div>
-        <div class="demo-content-info pure-u-1-2">
-          <div class="pure-u-3-4">
-            <div class="item item-unread pure-g">
-              <div class="pure-u">
-                <div class="stream-info">
-                </div>
-              </div>
-              <div class="pure-u-3-4">
-                <h5 class="news-title">Michael Rosata</h5>
-                <h4 class="news-subject">Lead Developer</h4>
-                <p class="news-desc">
-                  I'd like to tell you more about myself... but first I need to finish this project.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="demo-content-body">
-
-
-
-        <h3>Use Streams to turn events into powerful data pipelines!</h3><p>This stream will take <code>'keyup'</code> events from the
-        Element with selector <code>'.my-input'</code>. Streams are Lazy! So note that while
-        we've mapped a function after our event stream, it won't run until something is listening.
-        Don't believe me? Test it out for yourself!
-      </p>
-        <pre>
-    <code class="language-javascript">let event = Stream.fromEvent('keyup', '.my-input')
-    .map(path(['target', 'value']))
-    .map(val => {console.log(val); return val;})
-    // Until we subscribe, that message will never log
-</code>
-</pre><p>Start a stream from all clicks that maps straight to <code>event.target.dataset.action</code>,
-        then subscribe the that stream, use <code>filter</code> to prevent null or undefined values
-        from polluting our stream followed by <code>curry</code> which will collect values from the
-        stream until it can fill the parameters of the passed function, then evaluates the function
-        using the collected values, streams result downstream and repeats!</p><pre><code class="language-javascript">let clickStream = Stream.fromEvent('click')
-    .map(path(['target', 'dataset', 'pushValue']))
-
-clickStream.subscribe.filter()
-  .curry((a,b,c) => a * b * c)
-  .subscribe.map(alert)
-
-</code>
-</pre>
-        <!--div class="calculator">
-          <div class="pure-g">
-            <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="7">7</span>
-      </div>
-            <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="8">8</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="9">9</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="4">4</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="5">5</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="6">6</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="1">1</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="2">2</span>
-      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="3">3</span>
-      </div><div class="pure-u-1-3">
-      </div>
-            <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="0">0</span>
-      </div><div class="pure-u-1-3">
-      </div>
-            <div class="pure-u-1-2"><span class="fail answer md" data-element="fail-message">
-      </span>
-      </div>
-            <div class="pure-u-1-2"><span class="success answer md" data-element="pass-message">
-      </span>
-      </div>
-          </div>
-        </div-->
-
-        <p><span class="logo">Micro-Stream JS</span> doesn't make too many assumptions about your tool chain, and
-          in that spirit streams have a limited set of utilities which hopefully will allow you to write the
-          way you choose to write. Below are some common behaviours that are useful within most programming
-          paradigms</p>
-        <pre><code class="language-javascript">// Tap
-// Trap
-</code>
-
-</pre>
-        <p>The marvelous thing about streams is that they can branch off into new streams midway through
-          a pipeline, so whenever you have values that need to do 2 different things, just split the
-          stream. All streams are cancellable, when a stream is cancelled, any steams subscribed to it, or
-          subscribed to that streams subscribers, and on and on, are all cancelled as well. So you have
-          very fine grain control over how long streams stay running, it's a trivial thing to shut down a
-          few branches of a stream and leave another branch running strong!
-
-        </p>
-        <section id="api-docs">
-          <div class="api-content">
-            <h3 id="Streams" data-api-doc="Streams">Streams</h3>
-            <p class="api-doc">
-            </p>
-          </div>
-
-          <div class="api-content">
-            <h3 id="StreamObservers">StreamObservers</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="from">from</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="fromEvent">fromEvent</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="curried">curried</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="curry">curry</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="Map">Map</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="Tap">Tap</h3>
-            <p class="api-doc">...</p>
-          </div>
-          <div class="api-content">
-            <h3 id="Trap">Trap</h3>
-            <p class="api-doc">...</p>
-          </div>
-        </section>
-
-      </div>
-    </div>
-  </div>
-</div>
-
+<span class="token comment" spellcheck="true">// With map instead of tap</span>
+someStream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword keyword-return">return</span> val<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></div><div class="api-content"><h3 id="trap">.trap</h3><p>Error handling for your stream. <code>.trap</code> will take 2 functions, ........</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div><div class="api-content"><h3 id="path">.path</h3><p>Path will resolve a property from an object being passed downstream. It then passes that value downstream (or undefined if the object property path doesn't exist). This allows you as a developer to stop writing nests of code like: <code>if (obj[prop]) {...}</code> just to get a value from an object in the stream. This is such a common task that I felt it really should be placed in the class. If you already use Ramda or Lodash, by all means simply map to their implementations.</p><pre class=" language-javascript"><code class=" language-javascript">someStream<span class="token punctuation">.</span><span class="token function">path</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'path'</span><span class="token punctuation">,</span> <span class="token string">'to'</span><span class="token punctuation">,</span> <span class="token string">'property'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token comment" spellcheck="true">/*...resolved value continues downstream...*/</span><span class="token punctuation">)</span></code></pre></div><div class="api-content"><h3 id="filter">.filter</h3><p>... info.</p><pre class=" language-javascript"><code class=" language-javascript">Stream<span class="token punctuation">.</span><span class="token keyword keyword-of">of</span><span class="token punctuation">(</span><span class="token string">'so-cool'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>subscribe</code></pre></div></div></div></div></section></div></div></div>
 <script data-main="app/js/main" src="./app/js/require.js" async></script>
 <script type="text/javascript" src="app/js/prism.min.js" async></script>
+</body><div></div></html>
 
-</body>
-</html>
+
+
