@@ -16,7 +16,7 @@
     font-family: 'Open Sans', sans-serif;
   }
   </style>
-  <link rel="stylesheet" href="./app/styles/prism.min.css">
+  <link rel="stylesheet" href="./app/styles/prism.css">
   <link rel="stylesheet" href="./app/styles/main.css">
 </head>
 <body id="app">
@@ -28,35 +28,35 @@
 
         <ul class="pure-menu-list">
           <li class="pure-menu-item">
-            <a class="pure-menu-link">Streams</a>
+            <a class="pure-menu-link" href="#Streams">Streams</a>
           </li>
           <li class="pure-menu-item">
-            <a class="pure-menu-link">Stream Observers</a>
-          </li>
-        </ul>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item">
-            <a class="pure-menu-link">from</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link">fromEvent</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link">curried</a>
-          </li>
-          <li class="pure-menu-item">
-            <a class="pure-menu-link">curry</a>
+            <a class="pure-menu-link" href="#StreamObservers">Stream Observers</a>
           </li>
         </ul>
         <ul class="pure-menu-list">
           <li class="pure-menu-item">
-            <a class="pure-menu-link">Map</a>
+            <a class="pure-menu-link" href="#from">from</a>
           </li>
           <li class="pure-menu-item">
-            <a class="pure-menu-link">Tap</a>
+            <a class="pure-menu-link" href="#fromEvent">fromEvent</a>
           </li>
           <li class="pure-menu-item">
-            <a class="pure-menu-link">Trap</a>
+            <a class="pure-menu-link" href="#curried">curried</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link" href="#curry">curry</a>
+          </li>
+        </ul>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item">
+            <a class="pure-menu-link" href="#Map">Map</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link" href="#Tap">Tap</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link" href="#Trap">Trap</a>
           </li>
         </ul>
       </div>
@@ -106,10 +106,10 @@
     // Until we subscribe, that message will never log
 </code>
 </pre><p>Start a stream from all clicks that maps straight to <code>event.target.dataset.action</code>,
-          then subscribe the that stream, use <code>filter</code> to prevent null or undefined values
-          from polluting our stream followed by <code>curry</code> which will collect values from the
-          stream until it can fill the parameters of the passed function, then evaluates the function
-          using the collected values, streams result downstream and repeats!</p><pre><code class="language-javascript">let clickStream = Stream.fromEvent('click')
+        then subscribe the that stream, use <code>filter</code> to prevent null or undefined values
+        from polluting our stream followed by <code>curry</code> which will collect values from the
+        stream until it can fill the parameters of the passed function, then evaluates the function
+        using the collected values, streams result downstream and repeats!</p><pre><code class="language-javascript">let clickStream = Stream.fromEvent('click')
     .map(path(['target', 'dataset', 'pushValue']))
 
 clickStream.subscribe.filter()
@@ -161,15 +161,47 @@ clickStream.subscribe.filter()
           few branches of a stream and leave another branch running strong!
 
         </p>
-        <div class="stream-content"><p id="stream-1">
-        </p>
-        </div><div class="stream-content"><p id="stream-2">
-        </p>
-        </div><div class="stream-content"><p id="stream-3">
-        </p>
-        </div><div class="stream-content"><p id="stream-4">
-        </p>
-        </div>
+        <section id="api-docs">
+          <div class="api-content">
+            <h3 id="Streams">Streams</h3>
+            <p class="api-doc">
+            </p>
+          </div>
+
+          <div class="api-content">
+            <h3 id="StreamObservers">StreamObservers</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="from">from</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="fromEvent">fromEvent</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="curried">curried</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="curry">curry</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="Map">Map</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="Tap">Tap</h3>
+            <p class="api-doc">...</p>
+          </div>
+          <div class="api-content">
+            <h3 id="Trap">Trap</h3>
+            <p class="api-doc">...</p>
+          </div>
+        </section>
+
       </div>
     </div>
   </div>
