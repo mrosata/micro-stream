@@ -36,7 +36,7 @@
     "lib",
     "dist"
   ],
-  "homepage": "https://github.com/mrosata/micro-stream#readme",
+  "homepage": "https://mrosata.github.io/micro-stream",
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.15.0"
   },
