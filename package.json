@@ -1,0 +1,9 @@
+{
+  "name": "micro-stream",
+  "scripts": {
+    "stylelint": "stylelint"
+  },
+  "dependencies": {
+    "stylelint": "^7.6.0"
+  }
+}
