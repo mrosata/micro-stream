@@ -216,5 +216,5 @@ if (!(__cov_FyQeXu2t2z1yJ5HdXuoxmg['/home/michael/projects/bin/micro-stream/lib/
 }
 __cov_FyQeXu2t2z1yJ5HdXuoxmg = __cov_FyQeXu2t2z1yJ5HdXuoxmg['/home/michael/projects/bin/micro-stream/lib/index.js'];
 
-export { Stream, inspect };
+export default Stream;
 //# sourceMappingURL=micro-stream.mjs.map

@@ -18,7 +18,7 @@ export default {
     {
       dest: pkg['main'],
       format: 'umd',
-      moduleName: 'rollupStarterProject',
+      moduleName: 'microStream',
       sourceMap: true
     },
     {
