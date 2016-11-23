@@ -5,7 +5,12 @@
 body {
     color: #333;
 }
-
+.pure-menu-link, [data-action], .button {
+    cursor: pointer;
+}
+.logo.light {
+    color: #f8faf8;
+}
 a {
     text-decoration: none;
     color: #1b98f8;
@@ -160,7 +165,7 @@ a {
 
 /* Email Content Styles */
 .demo-content-header, .demo-content-body, .demo-content-footer {
-    padding: 1em 2em;
+    padding: 0 0 0 1rem;
 }
 .demo-content-header {
     border-bottom: 1px solid #ddd;
@@ -177,11 +182,11 @@ a {
 .demo-content-subtitle span {
     color: #999;
 }
-.demo-content-controls {
-    margin-top: 2em;
+.demo-content-info {
+    margin-top: 0;
     text-align: right;
 }
-.demo-content-controls .secondary-button {
+.demo-content-info .secondary-button {
     margin-bottom: 0.3em;
 }
 
@@ -200,11 +205,11 @@ a {
 
     /* Move the layout over so we can fit the nav + list in on the left */
     #layout {
-        padding-left:500px; /* "left col (nav + list)" width */
+        padding-left:200px; /* "left col (nav + list)" width */
         position: relative;
     }
 
-    /* These are position:fixed; elements that will be in the left 500px of the screen */
+    /* These are position:fixed; elements that will be in the left 200px of the screen */
     #nav, #list {
         position: fixed;
         top: 0;
@@ -212,8 +217,8 @@ a {
         overflow: auto;
     }
     #nav {
-        margin-left:-500px; /* "left col (nav + list)" width */
-        width:150px;
+        margin-left:-200px; /* "left col (nav + list)" width */
+        width:200px;
         height: 100%;
     }
 
@@ -237,10 +242,10 @@ a {
 
     #main {
         position: fixed;
-        top: 33%;
+        top: 0;
         right: 0;
         bottom: 0;
-        left: 150px;
+        left: 200px;
         overflow: auto;
         width: auto; /* so that it's not 100% */
     }

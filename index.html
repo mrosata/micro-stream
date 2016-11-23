@@ -16,81 +16,100 @@
     font-family: 'Open Sans', sans-serif;
   }
   </style>
+  <link rel="stylesheet" href="./app/styles/prism.min.css">
   <link rel="stylesheet" href="./app/styles/main.css">
 </head>
 <body id="app">
 <div class="content pure-g" id="layout">
   <div class="pure-u" id="nav"><a class="nav-menu-button" href="#">Menu</a>
     <div class="nav-inner" data-template="menu">
+      <h3><span class="logo light">MicroStreamJS</span></h3>
       <div class="pure-menu">
-        <ul class="pure-menu-list">
-          <li>Streams</li>
-          <li>Stream Observers</li>
-        </ul>
-        <ul class="pure-menu-list">
-          <li>from</li>
-          <li>fromEvent</li>
-          <li>curried</li>
-          <li>curry</li>
-        </ul>
-        <ul class="pure-menu-list">
-          <li>Map</li>
-          <li>Tap</li>
-          <li>Trap</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="pure-u-1" id="list">
-    <div class="item item-selected pure-g">
-      <section data-template="controls">
 
-      </section>
-    </div>
-    <div class="item item-selected pure-g"><div class="pure-u"><img class="stream-info">
-    </div><div class="pure-u-3-4"><h5 class="news-title">11-20-2016</h5><h4 class="news-subject">Micro-Streams JS Begins</h4><p class="news-desc">Started this today as a small stream example. 25 lines made a stream.
-      But once you start flowing... you gotta keep going!
-    </p>
-    </div>
-    </div>
-    <div class="item item-unread pure-g">
-      <div class="pure-u">
-        <div class="stream-info">
-        </div>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">Streams</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">Stream Observers</a>
+          </li>
+        </ul>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">from</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">fromEvent</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">curried</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">curry</a>
+          </li>
+        </ul>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">Map</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">Tap</a>
+          </li>
+          <li class="pure-menu-item">
+            <a class="pure-menu-link">Trap</a>
+          </li>
+        </ul>
       </div>
-      <div class="pure-u-3-4">
-        <h5 class="news-title">Michael Rosata</h5>
-        <h4 class="news-subject">Lead Developer</h4>
-        <p class="news-desc">
-          I'd like to tell you more about myself... but first I need to finish this project.
-        </p>
-      </div>
     </div>
-  </div><div class="pure-u-1" id="main"><div class="demo-content"><div class="demo-content-header pure-g"><div class="pure-u-1-2"><h1 class="demo-content-title">Micro-Streams JS</h1><p class="demo-content-subtitle">1 Source<span>Unlimited Power</span>
-</p>
-</div>
-  <div class="demo-content-controls pure-u-1-2">
-    <button class="secondary-button pure-button">Reply</button>
-    <button class="secondary-button pure-button">Forward</button>
-    <button class="secondary-button pure-button">Move to</button>
   </div>
-</div>
-  <div class="demo-content-body"><h3>Use Streams to turn events into powerful data pipelines!</h3><p>This stream will take <code>'keyup'</code> events from the
-    Element with selector <code>'.my-input'</code>. Streams are Lazy! So note that while
-    we've mapped a function after our event stream, it won't run until something is listening.
-    Don't believe me? Test it out for yourself!
-  </p>
-    <pre>
+
+  <div class="pure-u-1" id="main">
+    <div class="demo-content">
+      <div class="demo-content-header pure-g">
+        <div class="pure-u-1-2">
+          <h1 class="demo-content-title">Micro-Streams JS</h1>
+          <p class="demo-content-subtitle"> 1 Source <span> Unlimited Power </span>
+          </p>
+        </div>
+        <div class="demo-content-info pure-u-1-2">
+          <div class="pure-u-3-4">
+            <div class="item item-unread pure-g">
+              <div class="pure-u">
+                <div class="stream-info">
+                </div>
+              </div>
+              <div class="pure-u-3-4">
+                <h5 class="news-title">Michael Rosata</h5>
+                <h4 class="news-subject">Lead Developer</h4>
+                <p class="news-desc">
+                  I'd like to tell you more about myself... but first I need to finish this project.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="demo-content-body">
+
+
+
+        <h3>Use Streams to turn events into powerful data pipelines!</h3><p>This stream will take <code>'keyup'</code> events from the
+        Element with selector <code>'.my-input'</code>. Streams are Lazy! So note that while
+        we've mapped a function after our event stream, it won't run until something is listening.
+        Don't believe me? Test it out for yourself!
+      </p>
+        <pre>
     <code class="language-javascript">let event = Stream.fromEvent('keyup', '.my-input')
     .map(path(['target', 'value']))
     .map(val => {console.log(val); return val;})
     // Until we subscribe, that message will never log
 </code>
 </pre><p>Start a stream from all clicks that maps straight to <code>event.target.dataset.action</code>,
-      then subscribe the that stream, use <code>filter</code> to prevent null or undefined values
-      from polluting our stream followed by <code>curry</code> which will collect values from the
-      stream until it can fill the parameters of the passed function, then evaluates the function
-      using the collected values, streams result downstream and repeats!</p><pre><code class="language-javascript">let clickStream = Stream.fromEvent('click')
+          then subscribe the that stream, use <code>filter</code> to prevent null or undefined values
+          from polluting our stream followed by <code>curry</code> which will collect values from the
+          stream until it can fill the parameters of the passed function, then evaluates the function
+          using the collected values, streams result downstream and repeats!</p><pre><code class="language-javascript">let clickStream = Stream.fromEvent('click')
     .map(path(['target', 'dataset', 'pushValue']))
 
 clickStream.subscribe.filter()
@@ -99,63 +118,63 @@ clickStream.subscribe.filter()
 
 </code>
 </pre>
-    <!--div class="calculator">
-      <div class="pure-g">
-        <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="7">7</span>
-  </div>
-        <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="8">8</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="9">9</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="4">4</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="5">5</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="6">6</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="1">1</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="2">2</span>
-  </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="3">3</span>
-  </div><div class="pure-u-1-3">
-  </div>
-        <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="0">0</span>
-  </div><div class="pure-u-1-3">
-  </div>
-        <div class="pure-u-1-2"><span class="fail answer md" data-element="fail-message">
-  </span>
-  </div>
-        <div class="pure-u-1-2"><span class="success answer md" data-element="pass-message">
-  </span>
-  </div>
+        <!--div class="calculator">
+          <div class="pure-g">
+            <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="7">7</span>
       </div>
-    </div-->
+            <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="8">8</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="9">9</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="4">4</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="5">5</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="6">6</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="1">1</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="2">2</span>
+      </div><div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="3">3</span>
+      </div><div class="pure-u-1-3">
+      </div>
+            <div class="pure-u-1-3"><span class="pure-button calculator-button" data-push-value="0">0</span>
+      </div><div class="pure-u-1-3">
+      </div>
+            <div class="pure-u-1-2"><span class="fail answer md" data-element="fail-message">
+      </span>
+      </div>
+            <div class="pure-u-1-2"><span class="success answer md" data-element="pass-message">
+      </span>
+      </div>
+          </div>
+        </div-->
 
-    <p><span class="logo">MicroStreamJS</span> doesn't make too many assumptions about your tool chain, and
-      in that spirit streams have a limited set of utilities which hopefully will allow you to write the
-      way you choose to write. Below are some common behaviours that are useful within most programming
-      paradigms</p>
-    <pre><code class="language-javascript">// Tap
+        <p><span class="logo">Micro-Stream JS</span> doesn't make too many assumptions about your tool chain, and
+          in that spirit streams have a limited set of utilities which hopefully will allow you to write the
+          way you choose to write. Below are some common behaviours that are useful within most programming
+          paradigms</p>
+        <pre><code class="language-javascript">// Tap
 // Trap
 </code>
 
 </pre>
-    <p>The marvelous thing about streams is that they can branch off into new streams midway through
-      a pipeline, so whenever you have values that need to do 2 different things, just split the
-      stream. All streams are cancellable, when a stream is cancelled, any steams subscribed to it, or
-      subscribed to that streams subscribers, and on and on, are all cancelled as well. So you have
-      very fine grain control over how long streams stay running, it's a trivial thing to shut down a
-      few branches of a stream and leave another branch running strong!
+        <p>The marvelous thing about streams is that they can branch off into new streams midway through
+          a pipeline, so whenever you have values that need to do 2 different things, just split the
+          stream. All streams are cancellable, when a stream is cancelled, any steams subscribed to it, or
+          subscribed to that streams subscribers, and on and on, are all cancelled as well. So you have
+          very fine grain control over how long streams stay running, it's a trivial thing to shut down a
+          few branches of a stream and leave another branch running strong!
 
-    </p>
-    <div class="stream-content"><p id="stream-1">
-    </p>
-    </div><div class="stream-content"><p id="stream-2">
-    </p>
-    </div><div class="stream-content"><p id="stream-3">
-    </p>
-    </div><div class="stream-content"><p id="stream-4">
-    </p>
+        </p>
+        <div class="stream-content"><p id="stream-1">
+        </p>
+        </div><div class="stream-content"><p id="stream-2">
+        </p>
+        </div><div class="stream-content"><p id="stream-3">
+        </p>
+        </div><div class="stream-content"><p id="stream-4">
+        </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-</div>
-</div>
-
+<script type="text/javascript" src="app/js/prism.min.js"></script>
 <script type="text/javascript" src="./app/js/micro-stream.js" defer></script>
 <script type="text/javascript" src="./app/js/helpers.js" defer></script>
 <script type="text/javascript" src="./app/js/main.js" defer></script>
