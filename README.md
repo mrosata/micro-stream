@@ -1,5 +1,6 @@
 ### Micro Streams (beta)
 
+[Check out the Github.io Page -- under construction](https://mrosata.github.io/micro-stream)
 The magic of streams, in a small package. Micro streams is a minimal implementation of some very powerful streams. The streams are designed to work in very specific, predictable ways, which allows for you to easily hook a stream up to any part of your program (including other streams!)
 
 ##### Install
