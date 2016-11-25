@@ -5,6 +5,7 @@
   "main": "dist/micro-stream.js",
   "module": "dist/micro-stream.mjs",
   "jsnext:main": "dist/micro-stream.mjs",
+  "iife:main": "dist/micro-stream.global.js",
   "scripts": {
     "prebuild": "eslint lib test",
     "build": "rollup -c",

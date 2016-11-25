@@ -25,6 +25,12 @@ export default {
       dest: pkg['jsnext:main'],
       format: 'es',
       sourceMap: true
+    },
+    {
+      dest: pkg['iife:main'],
+      format: 'iife',
+      moduleName: 'Stream',
+      sourceMap: true
     }
   ]
 };
