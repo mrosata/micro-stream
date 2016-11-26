@@ -1,7 +1,7 @@
 {
   "name": "micro-stream",
-  "version": "0.1.4",
-  "description": "Small Streams.. Powerful Streams.. Micro Stream JS",
+  "version": "0.1.5",
+  "description": "Small Streams.. Powerful Streams.. MicroStream JS",
   "main": "dist/micro-stream.js",
   "module": "dist/micro-stream.mjs",
   "jsnext:main": "dist/micro-stream.mjs",
