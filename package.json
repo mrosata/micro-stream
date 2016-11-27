@@ -1,6 +1,6 @@
 {
   "name": "micro-stream",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Small Streams.. Powerful Streams.. MicroStream JS",
   "main": "dist/micro-stream.js",
   "module": "dist/micro-stream.mjs",
