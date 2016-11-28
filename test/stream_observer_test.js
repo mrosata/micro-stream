@@ -14,12 +14,12 @@ import { MockStreamUtil } from './mock-stream-util';
 describe('StreamObserver tests', function () {
   
   let stream1, mockUtil;
-  beforeEach(() => {
+  beforeEach(function () {
     // Create new stream to use for tests.
     stream1 = Stream.of();
     mockUtil = new MockStreamUtil();
   });
-  afterEach(() => {
+  afterEach(function () {
     // Cancel Stream and nullify reference
     if (stream1 && stream1.cancel) {
       stream1.cancel();
