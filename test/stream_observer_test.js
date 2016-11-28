@@ -28,7 +28,7 @@ describe('StreamObserver tests', function () {
     mockUtil = null;
   });
   
-  it('should be created implicitly through Stream subscription', () => {
+  it('should be created implicitly through Stream subscription', function () {
     stream1 = Stream.of();
     
     expect(stream1).to.be.an.object;
@@ -40,7 +40,7 @@ describe('StreamObserver tests', function () {
     
   });
   
-  it('should be able to map ops over values passed from stream', () => {
+  it('should be able to map ops over values passed from stream', function () {
     stream1 = Stream.of();
     mockUtil = new MockStreamUtil();
     

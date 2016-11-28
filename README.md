@@ -6,7 +6,7 @@ Looking for something specific? Maybe you'd do better checking out [the API & Do
 
 Installation
 ----
-MicroStream JS is about 10.3KB on the wire gzipped and comes wrapped in an [UMD (Universal Module Definition)][umd-git-repo], which is compatible with almost all of the widely used module formats today. MicroStream JS should integrate easily into your projects.
+MicroStream JS is about 10.8KB on the wire gzipped and comes wrapped in an [UMD (Universal Module Definition)][umd-git-repo], which is compatible with almost all of the widely used module formats today. MicroStream JS should integrate easily into your projects.
 
 ```sh
 $ # Install Micro-Stream JS using Yarn.

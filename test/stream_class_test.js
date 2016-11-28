@@ -11,12 +11,12 @@ import { MockStreamUtil } from './mock-stream-util';
 describe('Stream tests, basic creation and functionality', function () {
   
   let stream1, mockUtil;
-  beforeEach(() => {
+  beforeEach(function () {
     // Create new stream to use for tests.
     stream1 = Stream.of();
     mockUtil = new MockStreamUtil();
   });
-  afterEach(() => {
+  afterEach(function () {
     // Cancel Stream and nullify reference
     if (stream1 && stream1.cancel) {
       stream1.cancel();
@@ -27,13 +27,13 @@ describe('Stream tests, basic creation and functionality', function () {
 
 
 // ATM this just a test to test that tests work, (they don't actually test anything)
-  describe('Creating Streams with Stream class', () => {
+  describe('Creating Streams with Stream class', function () {
     let myStream;
     beforeEach(() => {
       myStream = null;
     });
     
-    it('should have tenants of the Stream class', () => {
+    it('should have tenants of the Stream class', function () {
       // The identifier myStream should be null to begin with
       expect(myStream).to.be.null;
       expect(Stream).to.be.a.function;
@@ -42,7 +42,7 @@ describe('Stream tests, basic creation and functionality', function () {
     });
     
     
-    it('should be able to create new Streams', () => {
+    it('should be able to create new Streams', function () {
       expect(myStream).to.be.null;
       myStream = new Stream();
       
@@ -72,7 +72,7 @@ describe('Stream tests, basic creation and functionality', function () {
   
   
   
-  describe('Subscribing and Cancelling to a stream.', () => {
+  describe('Subscribing and Cancelling to a stream.', function () {
     beforeEach(() => {
       
     })
@@ -80,9 +80,9 @@ describe('Stream tests, basic creation and functionality', function () {
   
   
   
-  describe('Laziness of Stream', () => {
+  describe('Laziness of Stream', function () {
     
-    it('should not take action on map until subscribed to', () => {
+    it('should not take action on map until subscribed to', function () {
       mockUtil.setState(1);
       stream1.map((data) => {
         mockUtil.setState(data);
@@ -98,7 +98,7 @@ describe('Stream tests, basic creation and functionality', function () {
     });
     
     
-    it('should not take action on tap until subscribed to', () => {
+    it('should not take action on tap until subscribed to', function () {
       mockUtil.setState(1);
       stream1.tap((data) => {
         mockUtil.setState(data);
@@ -113,7 +113,7 @@ describe('Stream tests, basic creation and functionality', function () {
     });
     
     
-    it('should not take action on trap until subscribed to', () => {
+    it('should not take action on trap until subscribed to', function () {
       mockUtil.setState(1);
       stream1
         .trap(function (data) {
