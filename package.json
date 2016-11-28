@@ -12,7 +12,7 @@
     "build:gzip": "rollup -c && gzip dist/micro-stream.js",
     "watch": "rollup -c -w",
     "pretest": "npm run build",
-    "test": "mocha",
+    "test": "_mocha",
     "prepublish": "npm test"
   },
   "repository": {

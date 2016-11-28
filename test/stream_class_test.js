@@ -11,23 +11,33 @@ import { MockStreamUtil } from './mock-stream-util';
 describe('Stream tests, basic creation and functionality', function () {
   
   let stream1, mockUtil;
-  beforeEach(function () {
+  
+  /**
+   * beforeEach
+   */
+  beforeEach('Creating clean stream and mock util', function () {
     // Create new stream to use for tests.
-    stream1 = Stream.of();
+    stream1 = Stream.of(null);
     mockUtil = new MockStreamUtil();
   });
-  afterEach(function () {
+  
+  /**
+   * afterEach
+   */
+  afterEach('Cleaning state of stream and mock util', function () {
     // Cancel Stream and nullify reference
-    if (stream1 && stream1.cancel) {
+    if (stream1 && stream1.cancel && !stream1.__cancelled) {
       stream1.cancel();
     }
     stream1 = null;
     mockUtil = null;
   });
-
-
-// ATM this just a test to test that tests work, (they don't actually test anything)
-  describe('Creating Streams with Stream class', function () {
+  
+  
+  /**
+   * Stream Creation with of and new.
+   */
+  describe('Stream.of() & new Stream()', function () {
     let myStream;
     beforeEach(() => {
       myStream = null;
@@ -71,67 +81,218 @@ describe('Stream tests, basic creation and functionality', function () {
   });
   
   
-  
-  describe('Subscribing and Cancelling to a stream.', function () {
-    beforeEach(() => {
+  /**
+   * Stream#subscribe
+   */
+  describe('Stream#subscribe', function () {
+    it('should not have any effects from before subscription', function () {
+      stream1.tap((data) => {
+        mockUtil.setState(data);
+      });
       
-    })
+      expect(mockUtil.getState()).to.be.null;
+      stream1.push(100);
+      expect(mockUtil.getState()).to.be.null;
+    });
+    
+    it('should runs ops after subscription starts', function () {
+      
+      stream1.tap((data) => {
+        mockUtil.setState(data);
+      });
+      
+      expect(mockUtil.getState()).to.be.null;
+      stream1.subscribe;
+      
+      stream1.push(100);
+      expect(mockUtil.getState()).to.equal(100);
+    });
+    
   });
   
   
   
-  describe('Laziness of Stream', function () {
+  /**
+   * Stream#cancel
+   */
+  describe('Stream#cancel', function () {
+    it('should not have any effects after cancellation', function () {
+      stream1.subscribe
+        .map(val => val + 100)
+        .map(val => val + 200)
+        .tap(data => mockUtil.setState(data));
+      
+      stream1.push(50);
+      expect(mockUtil.getState()).to.equal(350);
+      
+      stream1.push(100);
+      expect(mockUtil.getState()).to.equal(400);
+      
+      mockUtil.setState("can't touch this...");
+      stream1.cancel();
+      stream1.push(200);
+      stream1.push('mah na na nump, dah dum, bahn bump!');
+      expect(mockUtil.getState()).to.equal("can't touch this...");
+    });
     
-    it('should not take action on map until subscribed to', function () {
+  });
+  
+  
+  
+  /**
+   * Stream#map
+   */
+  describe('Stream#map', function () {
+    
+    it('runs ops only if pushed after subscribe.', function () {
       mockUtil.setState(1);
+      
       stream1.map((data) => {
         mockUtil.setState(data);
         return data;
       });
-      stream1.push(99);
       
       expect(mockUtil.getState()).to.equal(1);
-      
       stream1.subscribe;
       stream1.push(99);
       expect(mockUtil.getState()).to.equal(99);
     });
     
-    
-    it('should not take action on tap until subscribed to', function () {
+    it('properly passes and accepts values.', function () {
       mockUtil.setState(1);
-      stream1.tap((data) => {
-        mockUtil.setState(data);
-      });
-      stream1.push(99);
       
-      expect(mockUtil.getState()).to.equal(1);
-      
-      stream1.subscribe;
-      stream1.push(99);
-      expect(mockUtil.getState()).to.equal(99);
-    });
-    
-    
-    it('should not take action on trap until subscribed to', function () {
-      mockUtil.setState(1);
       stream1
-        .trap(function (data) {
-          mockUtil.setState(data);
-          throw "Error so that tap error handler runs if this runs!";
-        }, function(/*err*/) {
-          mockUtil.setState(10);
-          return 10;
-        });
+        .map((data) => data + 200)
+        .map(data => data * 2)
+        .map(data => mockUtil.setState(data))
+        .subscribe;
       
-      stream1.push(99);
-      expect(mockUtil.getState()).to.equal(1);
+      stream1.push(50);
+      expect(mockUtil.getState()).to.equal(500);
+    });
+  });
+  
+  
+  /**
+   * Stream#tap
+   */
+  describe('Stream#tap', function () {
+    
+    it('will not run on values if Stream is not subscribed.', function () {
+      mockUtil.setState([]);
       
-      stream1.subscribe;
-      stream1.push(99);
-      // State should equal 10 because that is the value set in error handler.
-      expect(mockUtil.getState()).to.equal(10);
+      stream1.tap((data) => {
+        mockUtil.pushState(data);
+        return 999;
+      }).map(data => {
+        mockUtil.pushState(data);
+      });
+      
+      
+      expect(mockUtil.getState()).to.be.an.array;
+      expect(mockUtil.getState()).to.have.length(0);
+      stream1.push(10);
+      expect(mockUtil.getState()).to.have.length(0);
+    });
+    
+    
+    it('will run as no-op after Stream is subscribed.', function () {
+      mockUtil.setState([]);
+      
+      stream1.tap((data) => {
+        mockUtil.pushState(data);
+        return 999;
+      }).map(data => {
+        mockUtil.pushState(data);
+      }).subscribe;
+      
+      
+      expect(mockUtil.getState()).to.be.an.array;
+      expect(mockUtil.getState()).to.have.length(0);
+      stream1.push(10);
+      expect(mockUtil.getState()).to.have.length(2);
+      expect(mockUtil.getState()).to.not.include(999);
+    });
+    
+    it('passes the same value it accepts.', function () {
+      mockUtil.setState(1);
+      
+      stream1
+        .map(data => data * 2)
+        .tap(data => {
+          expect(data).to.equal(400);
+        })
+        .tap(data => data + 1000)
+        .tap(data => mockUtil.setState(data))
+        .map(data => {
+          expect(data).to.equal(400);
+        })
+        .subscribe;
+      
+      stream1.push(200);
+      expect(mockUtil.getState()).to.equal(400);
     });
     
   });
+  
+  
+  /**
+   * Stream#trap
+   */
+  describe('Stream#trap', function () {
+    
+    
+    it('runs ops only if pushed after subscribe.', function () {
+      mockUtil.setState(1);
+      stream1.trap((data) => {
+        mockUtil.setState(data);
+        return data;
+      });
+      
+      expect(mockUtil.getState()).to.equal(1);
+      
+      stream1.subscribe;
+      stream1.push(99);
+      expect(mockUtil.getState()).to.equal(99);
+    });
+    
+    
+    it('should work like map when there are no errors', function() {
+      
+      mockUtil.setState(1);
+      
+      stream1
+        .trap((data) => data + 200)
+        .trap(data => data * 2)
+        .trap(data => mockUtil.setState(data))
+        .subscribe;
+      
+      stream1.push(50);
+      expect(mockUtil.getState()).to.equal(500);
+    });
+    
+    it('should return value from error handler when there is an error', function () {
+      
+      mockUtil.setState([]);
+      
+      stream1
+        .trap(
+          () => {throw new Error("ooops");},
+          (err) => {
+            mockUtil.pushState(err.message);
+            return 777;
+          })
+        .trap(data => {
+          mockUtil.pushState(data);
+          return data;
+        })
+        .subscribe;
+      
+      stream1.push(50);
+      expect(mockUtil.getState()).to.have.length(2);
+      expect(mockUtil.getState()).to.eql(['ooops', 777]);
+    });
+    
+  });
+  
 });
