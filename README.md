@@ -19,11 +19,17 @@ If your using Webpack, Browserify, Node or RequireJS, you should be able to impo
 
 ```javascript
 // CommonJS
-import Stream from 'micro-stream';
+import {Stream} from 'micro-stream';
 // Browserify/NodeJS
 const Stream = require('micro-stream');
+// now we have { Stream, StreamObserver, StreamReducer }
+
 // RequireJS
-define(['Stream'], function (Stream) {/*...*/});
+define(['Streams'], function (Stream) {
+  /*..  Streams.Stream
+        Streams.StreamObserver
+        Streams.StreamReducer ..*/
+});
 ```
 
 There is also the option of dropping a script tag for the file `dist/micro-stream.global.js` which will introduce a global variable Stream, though this is not a recommended practice.
@@ -76,8 +82,8 @@ $ cd micro-stream
 ```
 
 #### Todos
- - Write Tests
- - Finish Docs
+ - Finish Writing Tests and Docs.
+ - Build some cool examples.
 
 
 #### License
