@@ -1,7 +1,7 @@
 /*global describe, it, before, beforeEach, after, afterEach */
-import { Stream, StreamObserver } from '../';
+import { Stream, StreamObserver } from '../src/index.js';
 import { expect } from 'chai';
-import { MockStreamUtil } from './mock-stream-util';
+import { MockStreamUtil } from './mockStreamUtil.js';
 
 
 /**
@@ -49,19 +49,18 @@ describe('StreamObserver tests', function () {
     
     it('should be created implicitly via Stream subscription', function () {
       
-      expect(stream1).to.be.an.object;
+      expect(stream1).to.be.an('object');
       expect(stream1.constructor).to.deep.equal(Stream);
       
       observer = stream1.subscribe;
-      expect(observer).to.be.an.object;
+      expect(observer).to.be.an('object');
       expect(observer.constructor).to.deep.equal(StreamObserver)
       
     });
   
     it('should be created using StreamObserver#of', function () {
-      observer = StreamObserver.of(stream1, (data) => {
-        data + 10;
-      });
+      observer = StreamObserver.of(
+        stream1, (data) => data + 10);
       
       expect(observer.constructor).to.deep.equal(StreamObserver);
     });

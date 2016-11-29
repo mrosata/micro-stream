@@ -1,12 +1,12 @@
 /*global describe, it, before, beforeEach, after, afterEach */
-import { Stream, StreamReducer } from '../';
+import { Stream, StreamReducer } from '../src/index.js';
 import { expect } from 'chai';
-import { MockStreamUtil } from './mock-stream-util';
+import { MockStreamUtil } from './mockStreamUtil.js';
 
 
 /**
  * StreamReducer tests - these tests should ensure that the reduce
- * method creates expected patterns. 
+ * method creates expected patterns.
  */
 describe('StreamReducer tests', function () {
   
@@ -44,7 +44,7 @@ describe('StreamReducer tests', function () {
    */
   describe('StreamReducer creation', function() {
     it('should be creatable though static method StreamReducer#of', function() {
-      expect(StreamReducer).to.be.a.function;
+      expect(StreamReducer).to.be.a('function');
     });
   });
   
@@ -67,7 +67,7 @@ describe('StreamReducer tests', function () {
       
       stream1.push(10).push(20).push(30);
       
-      expect(mockUtil.getState()).to.eql([100]);
+      expect(mockUtil.getState()).to.eql([20, 60, 120]);
     });
   });
   

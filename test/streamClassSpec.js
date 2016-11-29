@@ -1,7 +1,7 @@
 /*global describe, it, before, beforeEach, after, afterEach */
-import { Stream } from '../';
+import { Stream } from '../src/index.js';
 import { expect } from 'chai';
-import { MockStreamUtil } from './mock-stream-util';
+import { MockStreamUtil } from './mockStreamUtil.js';
 
 
 /**
@@ -45,34 +45,33 @@ describe('Stream tests, basic creation and functionality', function () {
     
     it('should have tenants of the Stream class', function () {
       // The identifier myStream should be null to begin with
-      expect(myStream).to.be.null;
-      expect(Stream).to.be.a.function;
-      expect(Stream.of).to.be.a.function;
-      expect(Stream.fromEvent).to.be.a.function;
+      expect(myStream).to.be.a('null');
+      expect(Stream).to.be.a('function');
+      expect(Stream.of).to.be.a('function');
+      expect(Stream.fromEvent).to.be.a('function');
     });
     
     
     it('should be able to create new Streams', function () {
-      expect(myStream).to.be.null;
       myStream = new Stream();
       
-      expect(myStream).to.be.a.object;
+      expect(myStream).to.be.a('object');
       expect(myStream.constructor).to.deep.equal(Stream);
-      expect(myStream.map).to.be.a.function;
-      expect(myStream.tap).to.be.a.function;
-      expect(myStream.trap).to.be.a.function;
-      expect(myStream.__subscribe).to.be.a.function;
+      expect(myStream.map).to.be.a('function');
+      expect(myStream.tap).to.be.a('function');
+      expect(myStream.trap).to.be.a('function');
+      expect(myStream.__subscribe).to.be.a('function');
       expect(myStream).to.have.ownProperty('__cancelled');
       expect(myStream.__cancelled).to.equal(false);
       expect(myStream).to.have.ownProperty('__value');
-      expect(myStream.__value).to.be.a.function;
+      expect(myStream.__value).to.be.a('function');
       expect(myStream).to.have.ownProperty('observers');
-      expect(myStream.observers).to.be.a.array;
+      expect(myStream.observers).to.be.a('array');
       
     });
     
     it('should not be able to use stream instance methods on Stream', () => {
-      expect(Stream).to.be.a.object;
+      expect(Stream).to.be.an('function');
       expect(Stream.constructor).to.not.equal(Stream);
       expect(Stream).to.not.have.ownProperty('observers');
       expect(Stream).to.not.have.ownProperty('__cancelled');
@@ -90,9 +89,9 @@ describe('Stream tests, basic creation and functionality', function () {
         mockUtil.setState(data);
       });
       
-      expect(mockUtil.getState()).to.be.null;
+      expect(mockUtil.getState()).to.be.a('null');
       stream1.push(100);
-      expect(mockUtil.getState()).to.be.null;
+      expect(mockUtil.getState()).to.be.a('null');
     });
     
     it('should runs ops after subscription starts', function () {
@@ -101,7 +100,7 @@ describe('Stream tests, basic creation and functionality', function () {
         mockUtil.setState(data);
       });
       
-      expect(mockUtil.getState()).to.be.null;
+      expect(mockUtil.getState()).to.be.a('null');
       stream1.subscribe;
       
       stream1.push(100);
@@ -189,7 +188,7 @@ describe('Stream tests, basic creation and functionality', function () {
       });
       
       
-      expect(mockUtil.getState()).to.be.an.array;
+      expect(mockUtil.getState()).to.be.an('array');
       expect(mockUtil.getState()).to.have.length(0);
       stream1.push(10);
       expect(mockUtil.getState()).to.have.length(0);
@@ -207,7 +206,7 @@ describe('Stream tests, basic creation and functionality', function () {
       }).subscribe;
       
       
-      expect(mockUtil.getState()).to.be.an.array;
+      expect(mockUtil.getState()).to.be.an('array');
       expect(mockUtil.getState()).to.have.length(0);
       stream1.push(10);
       expect(mockUtil.getState()).to.have.length(2);
