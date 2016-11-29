@@ -1,4 +1,4 @@
-# MicroStream JS
+# MicroStream JS ![alt Travis CI test status](https://travis-ci.org/mrosata/micro-stream.svg?branch=master)
 The magic of streams, in a small package. MicroStream JS is a minimal implementation of a very powerful pattern. Streams are exciting, they transform the way you work with data in your applications. Streams may be a new paradigm for you and your programs, and they do require a shift in thinking, but one I believe that you will truly enjoy. Streams allow us as developers to become very expressive, as they provide an elegant solution to pairing complexities usually found within tight event-driven logic to the reliability of more generalized utility methods.
 
 Looking for something specific? Maybe you'd do better checking out [the API & Documentation Website for MicroStream JS][website].

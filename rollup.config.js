@@ -8,10 +8,11 @@ let external = Object.keys(pkg.dependencies);
 export default {
   entry: 'lib/index.js',
   plugins: [
-    babel(babelrc()),
     istanbul({
-      exclude: ['test/**/*', 'node_modules/**/*']
-    })
+      exclude: ['test/**/*', 'node_modules/**/*'],
+      ignore: [ '**/spec/**', '**/fixture/**' ]
+    }),
+    babel(babelrc())
   ],
   external: external,
   targets: [
@@ -19,18 +20,18 @@ export default {
       dest: pkg['main'],
       format: 'umd',
       moduleName: 'microStream',
-      sourceMap: true
+      sourceMap: false
     },
     {
       dest: pkg['jsnext:main'],
       format: 'es',
-      sourceMap: true
+      sourceMap: false
     },
     {
       dest: pkg['iife:main'],
       format: 'iife',
       moduleName: 'Stream',
-      sourceMap: true
+      sourceMap: false
     }
   ]
 };
