@@ -1,12 +1,17 @@
 {
+
+  "plugins": [
+    "import"
+  ],
+
   "rules": {
+    "strict": "off",
     "import/no-extraneous-dependencies": [
-      "error",
-      {
+      "error", {
+        "devDependencies": true,
         "optionalDependencies": false,
         "peerDependencies": false
       }
-    ],
-    "strict": "off"
+    ]
   }
 }

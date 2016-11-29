@@ -1,7 +1,7 @@
-"use strict";
 /*
  * @package MicroStreamJS (micro-stream)
  */
+'use strict';
 
 import { Stream, StreamObserver, StreamReducer } from './stream.class.js'
 

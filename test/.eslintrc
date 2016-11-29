@@ -2,15 +2,21 @@
   "env": {
     "mocha": true
   },
+
+  "plugins": [
+    "import"
+  ],
+
   "rules": {
+    "no-unused-expressions": "off",
+    "padded-blocks": "off",
+
     "import/no-extraneous-dependencies": [
-      "error",
-      {
+      "error", {
+        "devDependencies": true,
         "optionalDependencies": false,
         "peerDependencies": false
       }
-    ],
-    "no-unused-expressions": "off",
-    "padded-blocks": "off"
+    ]
   }
 }
