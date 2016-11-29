@@ -18,7 +18,7 @@ describe('Stream tests, basic creation and functionality', function () {
   beforeEach('Creating clean stream and mock util', function () {
     // Create new stream to use for tests.
     stream1 = Stream.of(null);
-    mockUtil = new MockStreamUtil();
+    mockUtil = new MockStreamUtil({});
   });
   
   /**
@@ -30,6 +30,7 @@ describe('Stream tests, basic creation and functionality', function () {
       stream1.cancel();
     }
     stream1 = null;
+    mockUtil.reset();
     mockUtil = null;
   });
   
@@ -38,14 +39,11 @@ describe('Stream tests, basic creation and functionality', function () {
    * Stream Creation with of and new.
    */
   describe('Stream.of() & new Stream()', function () {
-    let myStream;
-    beforeEach(() => {
-      myStream = null;
-    });
     
     it('should have tenants of the Stream class', function () {
+      stream1 = null;
       // The identifier myStream should be null to begin with
-      expect(myStream).to.be.a('null');
+      expect(stream1).to.be.a('null');
       expect(Stream).to.be.a('function');
       expect(Stream.of).to.be.a('function');
       expect(Stream.fromEvent).to.be.a('function');
@@ -53,20 +51,20 @@ describe('Stream tests, basic creation and functionality', function () {
     
     
     it('should be able to create new Streams', function () {
-      myStream = new Stream();
+      stream1 = new Stream();
       
-      expect(myStream).to.be.a('object');
-      expect(myStream.constructor).to.deep.equal(Stream);
-      expect(myStream.map).to.be.a('function');
-      expect(myStream.tap).to.be.a('function');
-      expect(myStream.trap).to.be.a('function');
-      expect(myStream.__subscribe).to.be.a('function');
-      expect(myStream).to.have.ownProperty('__cancelled');
-      expect(myStream.__cancelled).to.equal(false);
-      expect(myStream).to.have.ownProperty('__value');
-      expect(myStream.__value).to.be.a('function');
-      expect(myStream).to.have.ownProperty('observers');
-      expect(myStream.observers).to.be.a('array');
+      expect(stream1).to.be.a('object');
+      expect(stream1.constructor).to.deep.equal(Stream);
+      expect(stream1.map).to.be.a('function');
+      expect(stream1.tap).to.be.a('function');
+      expect(stream1.trap).to.be.a('function');
+      expect(stream1.__subscribe).to.be.a('function');
+      expect(stream1).to.have.ownProperty('__cancelled');
+      expect(stream1.__cancelled).to.equal(false);
+      expect(stream1).to.have.ownProperty('__value');
+      expect(stream1.__value).to.be.a('function');
+      expect(stream1).to.have.ownProperty('observers');
+      expect(stream1.observers).to.be.a('array');
       
     });
     
@@ -85,26 +83,29 @@ describe('Stream tests, basic creation and functionality', function () {
    */
   describe('Stream#subscribe', function () {
     it('should not have any effects from before subscription', function () {
+      mockUtil.setState('a', 'initial');
+      
       stream1.tap((data) => {
-        mockUtil.setState(data);
+        mockUtil.setState('a', data);
       });
       
-      expect(mockUtil.getState()).to.be.a('null');
+      
+      expect(mockUtil.getState('a')).to.equal('initial');
       stream1.push(100);
-      expect(mockUtil.getState()).to.be.a('null');
+      expect(mockUtil.getState('a')).to.equal('initial');
     });
+    
     
     it('should runs ops after subscription starts', function () {
       
       stream1.tap((data) => {
-        mockUtil.setState(data);
+        mockUtil.setState('a', data);
       });
       
-      expect(mockUtil.getState()).to.be.a('null');
       stream1.subscribe;
-      
       stream1.push(100);
-      expect(mockUtil.getState()).to.equal(100);
+      
+      expect(mockUtil.getState('a')).to.equal(100);
     });
     
   });
@@ -119,19 +120,19 @@ describe('Stream tests, basic creation and functionality', function () {
       stream1.subscribe
         .map(val => val + 100)
         .map(val => val + 200)
-        .tap(data => mockUtil.setState(data));
+        .tap(data => mockUtil.setState('a', data));
       
       stream1.push(50);
-      expect(mockUtil.getState()).to.equal(350);
+      expect(mockUtil.getState('a')).to.equal(350);
       
       stream1.push(100);
-      expect(mockUtil.getState()).to.equal(400);
+      expect(mockUtil.getState('a')).to.equal(400);
       
-      mockUtil.setState("can't touch this...");
+      mockUtil.setState('a', "can't touch this...");
       stream1.cancel();
       stream1.push(200);
       stream1.push('mah na na nump, dah dum, bahn bump!');
-      expect(mockUtil.getState()).to.equal("can't touch this...");
+      expect(mockUtil.getState('a')).to.equal("can't touch this...");
     });
     
   });
@@ -144,30 +145,30 @@ describe('Stream tests, basic creation and functionality', function () {
   describe('Stream#map', function () {
     
     it('runs ops only if pushed after subscribe.', function () {
-      mockUtil.setState(1);
+      mockUtil.setState('a', 1);
       
       stream1.map((data) => {
-        mockUtil.setState(data);
+        mockUtil.setState('a', data);
         return data;
       });
       
-      expect(mockUtil.getState()).to.equal(1);
+      expect(mockUtil.getState('a')).to.equal(1);
       stream1.subscribe;
       stream1.push(99);
-      expect(mockUtil.getState()).to.equal(99);
+      expect(mockUtil.getState('a')).to.equal(99);
     });
     
     it('properly passes and accepts values.', function () {
-      mockUtil.setState(1);
+      mockUtil.setState('a', 1);
       
       stream1
         .map((data) => data + 200)
         .map(data => data * 2)
-        .map(data => mockUtil.setState(data))
+        .map(data => mockUtil.setState('a', data))
         .subscribe;
       
       stream1.push(50);
-      expect(mockUtil.getState()).to.equal(500);
+      expect(mockUtil.getState('a')).to.equal(500);
     });
   });
   
@@ -178,43 +179,43 @@ describe('Stream tests, basic creation and functionality', function () {
   describe('Stream#tap', function () {
     
     it('will not run on values if Stream is not subscribed.', function () {
-      mockUtil.setState([]);
+      mockUtil.setState('a', []);
       
       stream1.tap((data) => {
-        mockUtil.pushState(data);
+        mockUtil.pushState('a', data);
         return 999;
       }).map(data => {
-        mockUtil.pushState(data);
+        mockUtil.pushState('a', data);
       });
       
       
-      expect(mockUtil.getState()).to.be.an('array');
-      expect(mockUtil.getState()).to.have.length(0);
+      expect(mockUtil.getState('a')).to.be.an('array');
+      expect(mockUtil.getState('a')).to.have.length(0);
       stream1.push(10);
-      expect(mockUtil.getState()).to.have.length(0);
+      expect(mockUtil.getState('a')).to.be.empty;
     });
     
     
     it('will run as no-op after Stream is subscribed.', function () {
-      mockUtil.setState([]);
+      mockUtil.setState('a', []);
       
       stream1.tap((data) => {
-        mockUtil.pushState(data);
+        mockUtil.pushState('a', data);
         return 999;
       }).map(data => {
-        mockUtil.pushState(data);
+        mockUtil.pushState('a', data);
       }).subscribe;
       
       
-      expect(mockUtil.getState()).to.be.an('array');
-      expect(mockUtil.getState()).to.have.length(0);
+      expect(mockUtil.getState('a')).to.be.an('array');
+      expect(mockUtil.getState('a')).to.have.length(0);
       stream1.push(10);
-      expect(mockUtil.getState()).to.have.length(2);
-      expect(mockUtil.getState()).to.not.include(999);
+      expect(mockUtil.getState('a')).to.have.length(2);
+      expect(mockUtil.getState('a')).to.not.include(999);
     });
     
     it('passes the same value it accepts.', function () {
-      mockUtil.setState(1);
+      mockUtil.setState('a', 1);
       
       stream1
         .map(data => data * 2)
@@ -222,14 +223,14 @@ describe('Stream tests, basic creation and functionality', function () {
           expect(data).to.equal(400);
         })
         .tap(data => data + 1000)
-        .tap(data => mockUtil.setState(data))
+        .tap(data => mockUtil.setState('a', data))
         .map(data => {
           expect(data).to.equal(400);
         })
         .subscribe;
       
       stream1.push(200);
-      expect(mockUtil.getState()).to.equal(400);
+      expect(mockUtil.getState('a')).to.equal(400);
     });
     
   });
@@ -242,54 +243,54 @@ describe('Stream tests, basic creation and functionality', function () {
     
     
     it('runs ops only if pushed after subscribe.', function () {
-      mockUtil.setState(1);
+      mockUtil.setState('a', 1);
       stream1.trap((data) => {
-        mockUtil.setState(data);
+        mockUtil.setState('a', data);
         return data;
       });
       
-      expect(mockUtil.getState()).to.equal(1);
+      expect(mockUtil.getState('a')).to.equal(1);
       
       stream1.subscribe;
       stream1.push(99);
-      expect(mockUtil.getState()).to.equal(99);
+      expect(mockUtil.getState('a')).to.equal(99);
     });
     
     
     it('should work like map when there are no errors', function() {
       
-      mockUtil.setState(1);
+      mockUtil.setState('a', 1);
       
       stream1
         .trap((data) => data + 200)
         .trap(data => data * 2)
-        .trap(data => mockUtil.setState(data))
+        .trap(data => mockUtil.setState('a', data))
         .subscribe;
       
       stream1.push(50);
-      expect(mockUtil.getState()).to.equal(500);
+      expect(mockUtil.getState('a')).to.equal(500);
     });
     
     it('should return value from error handler when there is an error', function () {
-      
-      mockUtil.setState([]);
+      // Set 'a' to an array that will hold values to test from stream.
+      mockUtil.setState('a', new Array(0));
       
       stream1
         .trap(
           () => {throw new Error("ooops");},
           (err) => {
-            mockUtil.pushState(err.message);
+            mockUtil.pushState('a', err.message);
             return 777;
           })
         .trap(data => {
-          mockUtil.pushState(data);
+          mockUtil.pushState('a', data);
           return data;
         })
         .subscribe;
       
       stream1.push(50);
-      expect(mockUtil.getState()).to.have.length(2);
-      expect(mockUtil.getState()).to.eql(['ooops', 777]);
+      expect(mockUtil.getState('a')).to.have.length(2);
+      expect(mockUtil.getState('a')).to.eql(['ooops', 777]);
     });
     
   });

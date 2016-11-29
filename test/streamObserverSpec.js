@@ -38,6 +38,7 @@ describe('StreamObserver tests', function () {
     
     stream1 = null;
     stream2 = null;
+    mockUtil.reset();
     mockUtil = null;
   });
   
@@ -73,23 +74,23 @@ describe('StreamObserver tests', function () {
   describe('Stream#map', function () {
     
     it('does not matter where the subscribe property is in relation to map.', function () {
-      mockUtil.setState([]);
+      mockUtil.setState('test', []);
       
       stream1
         .map(data => data * 2)
         .subscribe
         .map(data => data + 1000)
-        .map(data => mockUtil.pushState(data));
+        .map(data => mockUtil.pushState('test', data));
       
       stream2.subscribe
         .map(data => data * 2)
         .map(data => data + 1000)
-        .map(data => mockUtil.pushState(data));
+        .map(data => mockUtil.pushState('test', data));
       
       stream1.push(200);
       stream2.push(300);
-      expect(mockUtil.getState()).to.have.length(2);
-      expect(mockUtil.getState()).to.eql([1400, 1600])
+      expect(mockUtil.getState('test')).to.have.length(2);
+      expect(mockUtil.getState('test')).to.eql([1400, 1600])
     });
     
   });
@@ -101,7 +102,7 @@ describe('StreamObserver tests', function () {
   describe('StreamObserver#tap', function () {
     
     it('passes the same value it accepts.', function () {
-      mockUtil.setState(1);
+      mockUtil.setState('test', 1);
       
       stream1.subscribe
         .map(data => data * 2)
@@ -109,13 +110,13 @@ describe('StreamObserver tests', function () {
           expect(data).to.equal(400);
         })
         .tap(data => data + 1000)
-        .tap(data => mockUtil.setState(data))
+        .tap(data => mockUtil.setState('test', data))
         .map(data => {
           expect(data).to.equal(400);
         });
       
       stream1.push(200);
-      expect(mockUtil.getState()).to.equal(400);
+      expect(mockUtil.getState('test')).to.equal(400);
     });
     
   });
@@ -128,37 +129,37 @@ describe('StreamObserver tests', function () {
     
     it('should work like map when there are no errors', function() {
       
-      mockUtil.setState(1);
+      mockUtil.setState('test', 1);
       
       stream1.subscribe
         .trap((data) => data + 200)
         .trap(data => data * 2)
-        .trap(data => mockUtil.setState(data));
+        .trap(data => mockUtil.setState('test', data));
       
       stream1.push(50);
-      expect(mockUtil.getState()).to.equal(500);
+      expect(mockUtil.getState('test')).to.equal(500);
     });
     
     it('should return value from error handler when there is an error', function () {
       
-      mockUtil.setState([]);
+      mockUtil.setState('test', []);
       
       stream1.subscribe
         .trap(
           () => {throw new Error("ooops");},
           (err) => {
-            mockUtil.pushState(err.message);
+            mockUtil.pushState('test', err.message);
             return 777;
           })
         .trap(data => {
-          mockUtil.pushState(data);
+          mockUtil.pushState('test', data);
           return data;
         });
       
       stream1.push(50);
-      expect(mockUtil.getState()).to.have.length(2);
-      expect(mockUtil.getState()).to.include(777);
-      expect(mockUtil.getState()).to.include('ooops');
+      expect(mockUtil.getState('test')).to.have.length(2);
+      expect(mockUtil.getState('test')).to.include(777);
+      expect(mockUtil.getState('test')).to.include('ooops');
     });
     
   });
