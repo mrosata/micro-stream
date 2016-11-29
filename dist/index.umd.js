@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('babel-runtime/regenerator'), require('babel-runtime/core-js/object/get-prototype-of'), require('babel-runtime/helpers/possibleConstructorReturn'), require('babel-runtime/helpers/inherits'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('babel-runtime/core-js/object/assign'), require('babel-runtime/helpers/typeof')) :
   typeof define === 'function' && define.amd ? define(['exports', 'babel-runtime/regenerator', 'babel-runtime/core-js/object/get-prototype-of', 'babel-runtime/helpers/possibleConstructorReturn', 'babel-runtime/helpers/inherits', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'babel-runtime/core-js/object/assign', 'babel-runtime/helpers/typeof'], factory) :
-  (factory((global.micro-stream = global.micro-stream || {}),global._regeneratorRuntime,global._Object$getPrototypeOf,global._possibleConstructorReturn,global._inherits,global._classCallCheck,global._createClass,global._Object$assign,global._typeof));
+  (factory((global.microStream = global.microStream || {}),global._regeneratorRuntime,global._Object$getPrototypeOf,global._possibleConstructorReturn,global._inherits,global._classCallCheck,global._createClass,global._Object$assign,global._typeof));
 }(this, (function (exports,_regeneratorRuntime,_Object$getPrototypeOf,_possibleConstructorReturn,_inherits,_classCallCheck,_createClass,_Object$assign,_typeof) { 'use strict';
 
 _regeneratorRuntime = 'default' in _regeneratorRuntime ? _regeneratorRuntime['default'] : _regeneratorRuntime;

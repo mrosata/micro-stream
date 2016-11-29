@@ -1,6 +1,7 @@
 {
   "name": "micro-stream",
-  "version": "0.1.9",
+  "private": true,
+  "version": "0.2.1",
   "description": "Small Streams.. Powerful Streams.. MicroStream JS",
   "homepage": "https://mrosata.github.io/micro-stream/",
   "repository": "mrosata/micro-stream",

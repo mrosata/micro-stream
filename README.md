@@ -1,73 +1,128 @@
 # MicroStream JS ![alt Travis CI test status](https://travis-ci.org/mrosata/micro-stream.svg?branch=master)
-The magic of streams, in a small package. MicroStream JS is a minimal implementation of a very powerful pattern. Streams are exciting, they transform the way you work with data in your applications. Streams may be a new paradigm for you and your programs, and they do require a shift in thinking, but one I believe that you will truly enjoy. Streams allow us as developers to become very expressive, as they provide an elegant solution to pairing complexities usually found within tight event-driven logic to the reliability of more generalized utility methods.
+The magic of streams, in a small package. **MicroStream JS** is a minimal implementation of a very powerful pattern. Streams are exciting, they can transform the ways by which we work with and think about data in our applications. If streams are new to your programs, they could require a shift in thinking, but one that I believe you will truly enjoy. Streams allow us as developers to become very expressive, as they provide an elegant solution of pairing the complexities found within event-driven or async driven logic, with the reliability of logic typically found in small utility methods or pure functions.
 
-Looking for something specific? Maybe you'd do better checking out [the API & Documentation Website for MicroStream JS][website].
+Looking for more in-depth **MicroStream JS** information? Something specific in mind? Maybe you'd do better checking out [the API & Documentation Website for **MicroStream JS**][website].
 
+
+&nbsp;
 
 Installation
 ----
-MicroStream JS is about 10.8KB on the wire gzipped and comes wrapped in an [UMD (Universal Module Definition)][umd-git-repo], which is compatible with almost all of the widely used module formats today. MicroStream JS should integrate easily into your projects.
+**MicroStream JS** is about ~4KB - 10KB over the wire gzipped, it comes packaged in all the popular module formats, eg: [UMD (Universal Module Definition)][umd-git-repo]. **MicroStream JS** should integrate easily into your projects using `import`, `require`, `define`, if your project supports it... we support you! 
+
+**MicroStream JS** installs super simple with ***yarn*** or ***npm***.
 
 ```sh
+$ # Install using NPM
+$ npm install micro-stream --save
+
 $ # Install Micro-Stream JS using Yarn.
 $ yarn add micro-stream --save
-$ # ... or install using NPM
-$ npm install micro-stream --save
 ```
 
-If your using Webpack, Browserify, Node or RequireJS, you should be able to import the main Stream class in the same way which you'd normally import other packages.
+If your using Webpack/Browserify/RequireJS, AMD or NodeJS then you should be all set to import the main Stream class in the same way which you'd import any other package.
 
 ```javascript
-// CommonJS
-import {Stream} from 'micro-stream';
-// Browserify/NodeJS
-const Stream = require('micro-stream');
+// CommonJS, ES2015 imports
+import microStream from 'micro-stream';
+
+// Browserify/RequireJS/NodeJS
+const microStream = require('micro-stream');
 // now we have { Stream, StreamObserver, StreamReducer }
 
-// RequireJS
-define(['Streams'], function (Stream) {
-  /*..  Streams.Stream
-        Streams.StreamObserver
-        Streams.StreamReducer ..*/
-});
+// AMD
+define(['microStream'], function (microStream) {/*...code..*/});
 ```
 
-There is also the option of dropping a script tag for the file `dist/micro-stream.global.js` which will introduce a global variable Stream, though this is not a recommended practice.
+Now you will have access to the three Stream classes of "**MicroStream JS**". You could get away with only bringing the main `Stream` class into scope as it has access all three and will naturally transition into the proper Stream types as you need them. Additionally, you have access to the 3 class namespaces directly as well.
 
-```html
-    <!-- This is not the recommended method of importing MicroStreamJS -->
-    <script src="path/to/micro-stream/dist/micro-stream.global.js"></script>
+```javascript
+const { Stream, StreamObserver, StreamReducer } = microStream;
+
+// Want to make a stream? Let's do it!
+// First, let's make a logger, because logging is awesome! TEAM I/O!
+const logger = (label) => console.log.bind(console, `${label}: `);
+
+
+const stream = Stream.of(null)
+  .tap(logger('your number'))
+  .map(val => val * 5)
+  .tap(logger('times five'));
+  
+stream.push(10).push(20).push(30); // Nothing... MicroStream is lazy
+
+// So let's subscribe!
+const observer = stream.subscribe;
+
+stream.push(20); // 'your number: 5', 'times five: 100'
+
+// Then we can access cool features like `reduce`!
+observer.reduce((a, b) => a + b, 0)
+  .tap(logger('add-em-up'))
+  
+stream.push(100).push(30).push(-20).push(10);
+// Output:
+'your number:  100'
+'times five:  500'
+'add-em-up:  500'
+'your number:  30'
+'times five:  150'
+'add-em-up:  650'
+'your number:  -20'
+'times five:  -100'
+'add-em-up:  550'
+'your number:  10'
+'times five:  50'
+'add-em-up:  600'
 ```
 
 &nbsp;
 
-### Examples
-
+Examples
+----
 ##### **Example #1**: 
-Let us setup a stream from all clicks on the HTML `"body"` element. Whenever there are subscribers to the stream, then it will "map" all new clicks through any mapped ops (functions). If there are no subscribers, then the ops mapped to `clickStream` are never applied. Streams are lazy that way.
+Let us setup a stream from all clicks on the HTML `"body"` element. Whenever there are subscribers to the stream, then it will "map" all DOM click events through any ops mapped to the stream (*"ops" === "functions"*). If there are no subscribers, then the events passed to `clickStream` are never applied to any ops. Rembemer, streams are lazy that way.
   
-After subscribing, optional filters can be added (The `filter` method stops unwanted values from continuing downstream. Using `filter` without an explicit op by default will stop values of type `"undefined"`).
+After subscribing, optional filters can be added (The `filter` method stops unwanted values from continuing downstream. Using `filter` without an explicit filter op will stop `"undefined"` values by default). Below we'll collect the `event.pageX` value from each click, partially apply those values to a function that will multiply 3 numbers, if the number is over 5million, the app will throw an error and we'll fix that error using `.trap`. Take a look!  
 
 ```javascript
+// Let's use the logger from above!
+const logger = (label) => console.log.bind(console, `${label}: `);
+
+function iThrowErrorAfter5mil(val) {
+  if (val > 5000000) {
+    throw new Error('Too BIG!');
+  }
+  return val;
+}
+function iFixErrors(err) {
+  console.error(err.message);
+  return 4999999;
+}
 // First create some stream (fromEvent takes optional selector as param 2).
 let clickStream = Stream.fromEvent('click')
-  // Streams are lazy! So maps don't get called w/o subscribers.
-  .map( (x) => x.target.dataset.someDataProp )
+  .path(['pageX'])
+  .tap(logger('multiply'));
 
-let stream1 = clickStream.subscribe
-  // block undefined values from streaming using filter. 
+// Remember to subscribe or no work gets done.
+clickStream.subscribe
+// block undefined values from streaming using filter.
   .filter()
   // curry will stop the flow of stream until all params are filled.
-  .curry((a,b,c) => a * b * c)
-  .subscribe
-    // calls function with values and passes values on.
-    .tap(alert)
-    // maps values to function and passes new values on.
-    .map( (n) => n + 2 )
-    // same as map, but wrapped in try{}catch, Optional fallback function.
-    .trap(maybeErrorInFn, fallbackMapFn)
+  .curry((a, b, c) => a * b * c)
+  // Log out the value of the product of last 3 click `event.pageX`
+  .tap(logger('And that equals: '))
+  // maps values to function and passes new values on.
+  .map((n) => n + 2)
+  // same as map, but wrapped in try{}catch, Optional fallback function.
+  .trap(iThrowErrorAfter5mil, iFixErrors)
+  .tap(logger('Guaranteed Under 5 million'));
 ```
-##### API & Documentation
+
+&nbsp;
+
+API & Documentation
+----
 It is highly suggested that if you've come this far that  you check out [the API & Documentation Site for MicroStreamJS][website].
 
 &nbsp;
@@ -75,15 +130,19 @@ It is highly suggested that if you've come this far that  you check out [the API
 Project Information
 ----
 #### Contribution
-Would you like to help in the development of MicroStreamJS? You can clone the repo and contribute. The MicroStreamJS project was only created this week, 11/24/2015, so at the moment I don't have any better instructions. For those wanting to help out, your should reach out to me through email, [mrosata1984@gmail.com][mailtoMike]
+Would you like to help in the development of MicroStreamJS? You can clone the repo and contribute. The MicroStreamJS project was created, 11/23/2015, and at the moment I don't have any better instructions for those who wish to contribute. The npm package only has the modules for production, so to contribute you will have to clone this repo (*see below*), peek at the tests that are completed so far for inspiration on what needs to be done, or reach out to me through email, [michael.rosata@gmail.com][mailtoMike]
+
 ```sh
 $ git clone https://github.com/mrosata/micro-stream.git
 $ cd micro-stream
+$ yarn install        # or.. npm install
+$ yarn build          # or.. npm run build
+$ yarn test:watch 
 ```
 
 #### Todos
- - Finish Writing Tests and Docs.
- - Build some cool examples.
+ - **Finish Writing Tests and Docs** (*StreamReducer needs tests*).
+ - **Build some more cool examples** (*and test those too*).
 
 
 #### License
@@ -93,7 +152,7 @@ $ cd micro-stream
 
 #### Issues, Comments, Vegetables or Stones
 Have an issue? Make a PR or [post the issues here][git-issues]
-[Visit the website for API info][website]
+[Visit the MicroStream JS website for API info][website]
 
 
 #### Thanks
@@ -104,6 +163,7 @@ Of coarse none of this would have been easy without an amazing opensource commun
   -  [Mocha testing suite][mocha]
   -  [Chai testing utils][chai]
   -  [Istanbul test coverage][istanbul]
+  -  [Babel Runtime][babel-runtime]
   -  [Dillinger.io Markdown editor repo][dill]
   
 
@@ -113,7 +173,7 @@ Of coarse none of this would have been easy without an amazing opensource commun
    [git-repo]: <https://github.com/mrosata/micro-stream>
    [git-issues]: <https://github.com/mrosata/micro-stream/issues>
    [website]: <https://mrosata.github.io/micro-stream>
-   [mailtoMike]: <mailto:mrosata1984@gmail.com>
+   [mailtoMike]: <mailto:michael.rosata@gmail.com>
    [@onethingsimple]: <http://twitter.com/onethingsimple>
    [umd-git-repo]: <https://github.com/umdjs/umd>
    [dill]: <https://github.com/joemccann/dillinger>
@@ -124,4 +184,5 @@ Of coarse none of this would have been easy without an amazing opensource commun
    [chai]: <http://chaijs.com/>
    [istanbul]: <https://github.com/gotwarlost/istanbul>
    [rollup]: <http://rollupjs.org>
+   [babel-runtime]: <https://babeljs.io/docs/plugins/transform-runtime/>
    
