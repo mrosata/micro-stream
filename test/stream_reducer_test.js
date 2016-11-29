@@ -43,31 +43,32 @@ describe('StreamReducer tests', function () {
    * StreamReducer Creation
    */
   describe('StreamReducer creation', function() {
-
+    it('should be creatable though static method StreamReducer#of', function() {
+      expect(StreamReducer).to.be.a.function;
+    });
   });
   
   
   /**
-   * StreamReducer#map
+   * StreamReducer#filter
    */
-  describe('Stream#map', function () {
-
-  });
-  
-  
-  /**
-   * StreamReducer#tap
-   */
-  describe('StreamReducer#tap', function () {
-
-  });
-  
-  
-  /**
-   * StreamReducer#trap
-   */
-  describe('StreamReducer#trap', function () {
+  describe('Stream#reduce', function () {
     
+    it('should be able to add subsequent streamed data', function() {
+      mockUtil.setState([]);
+      
+      observer = stream1.subscribe;
+      
+      observer.map(x => x * 2)
+        .reduce((total, num) => total + num, 0)
+        .tap(data => {
+          mockUtil.pushState(data);
+        });
+      
+      stream1.push(10).push(20).push(30);
+      
+      expect(mockUtil.getState()).to.eql([100]);
+    });
   });
   
 });
