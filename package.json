@@ -2,7 +2,6 @@
   "name": "micro-stream",
   "version": "0.1.9",
   "description": "Small Streams.. Powerful Streams.. MicroStream JS",
-  "private": true,
   "homepage": "https://mrosata.github.io/micro-stream/",
   "repository": "mrosata/micro-stream",
   "author": "Michael Rosata <mrosata1984@gmail.com> (www.onethingsimple.com)",
