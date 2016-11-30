@@ -202,7 +202,7 @@ class StreamObserver extends Stream {
    * @param baseFn {Function}
    */
   curry(baseFn) {
-    const recursiveCase = isFunction;
+    const baseCase = test => !isFunction(test);
     const accumulator = (fn, arg) => {
       if (fn.length <= 1) {
         return fn(arg);
@@ -213,7 +213,7 @@ class StreamObserver extends Stream {
     
     const  cancelFn = this.cancel.bind(this);
     const streamObserver = new StreamReducer(
-      cancelFn, accumulator, recursiveCase, baseFn);
+      cancelFn, accumulator, baseCase, baseFn);
     
     this.observers.push(streamObserver);
     return streamObserver;
@@ -228,12 +228,12 @@ class StreamObserver extends Stream {
    * @returns {StreamObserver}
    */
   curried(baseFn) {
-    const recursiveCase = isFunction;
+    const baseCase = test => !isFunction(test);
     const accumulator = (fn, arg) => fn.call(fn, arg);
     
     const  cancelFn = this.cancel.bind(this);
     const streamObserver = new StreamReducer(
-      cancelFn, accumulator, recursiveCase, baseFn);
+      cancelFn, accumulator, baseCase, baseFn);
     
     this.observers.push(streamObserver);
     return streamObserver;
@@ -251,35 +251,35 @@ class StreamObserver extends Stream {
    */
   filter(filterFn = isSomething) {
     const accumulator = (accum, item) => item;
-    const recursiveCase = (val) => !filterFn(val);
+    const baseCase = (val) => filterFn(val);
     const streamObserver = new StreamReducer(
-      this.cancel.bind(this), accumulator, recursiveCase, null);
+      this.cancel.bind(this), accumulator, baseCase, null);
     
     this.observers.push(streamObserver);
     return streamObserver;
   }
   
   
-  reduce(accumulator, defaultValue = null, recursiveCase) {
-    let observer, _recursiveCase, reducer;
+  reduce(accumulator, defaultValue = null, baseCase) {
+    let observer, _baseCase, reducer;
     
-    if (!isFunction(recursiveCase)) {
+    if (!isFunction(baseCase)) {
       // This is going to do infinite folding, which means we will need a way
       // to get the values out from iterator without actually completing it.
       // So we'll create a new observer to receive each value everytime the
       // generator is ran.
       observer = new StreamObserver(this.cancel.bind(this), id);
-      _recursiveCase = (data) => {observer.push(data); return true;};
+      _baseCase = (data) => {observer.push(data); return false;};
       
       reducer = new StreamReducer(
-        this.cancel.bind(this), accumulator, _recursiveCase, defaultValue);
+        this.cancel.bind(this), accumulator, _baseCase, defaultValue);
     }
     else {
-      // The other case (recursiveCase was defined by developer as a function),
+      // The other case (baseCase was defined by developer as a function),
       // The reducer and the observer are the same thing, once the generator
       // completes it will push the reduced value out and start again.
       reducer = observer = new StreamReducer(
-        this.cancel.bind(this), accumulator, recursiveCase, defaultValue);
+        this.cancel.bind(this), accumulator, baseCase, defaultValue);
     }
     
     this.observers.push(reducer);
@@ -301,21 +301,22 @@ class StreamObserver extends Stream {
    */
   async(promiseFactory, rejectionHandler = id) {
     const observer = new StreamObserver(this.cancel.bind(this), id);
+  
+    // Since we "thread the loop" here, we have 2 cancellations.
+    // cancel this
+    const cancellations = () => {
+      observer.cancel.bind(observer);
+      this.cancel.bind(this);
+    };
     const reducer = new StreamReducer(
-      () => {
-        // Since we "thread the loop" here, we have 2 cancellations.
-        observer.cancel.bind(observer);
-        // cancel this
-        this.cancel.bind(this);
-      },
+      cancellations,
       (_, item) => {
         const promise = promiseFactory(item);
         promise
-          .then(id)
           .catch(rejectionHandler)
           .then(observer.push.bind(observer));
         return promise;
-      }, () => true);
+      }, () => false); // ()=>false is baseCase (we want infinite loop)
     
     this.observers.push(reducer);
     return observer;
@@ -328,18 +329,25 @@ class StreamObserver extends Stream {
 class StreamReducer extends StreamObserver {
   
   
-  static of(accumulator, recursiveCase, defaultValue) {
-    return new StreamReducer(null, accumulator, recursiveCase, defaultValue);
+  static of(accumulator, baseCase, defaultValue) {
+    return new StreamReducer(null, accumulator, baseCase, defaultValue);
   }
   
   
-  constructor(cancelStream, accumulator, recursiveCase, baseValue = []) {
+  /**
+   *
+   * @param cancelStream
+   * @param accumulator
+   * @param baseCase - recursive-case basically, but when true recursion stops
+   * @param baseValue
+   */
+  constructor(cancelStream, accumulator, baseCase, baseValue = []) {
     baseValue = isObject(baseValue) ? getCopy(baseValue) : baseValue;
     super(cancelStream, id);
     this.observers = [];
     this.__type = STREAM_REDUCER;
     this.__accumulator = accumulator;
-    this.__recursiveCase = recursiveCase;
+    this.__baseCase = isFunction(baseCase) ? baseCase : ()=>true;
     this.__baseValue = baseValue;
     this.prepareIterator();
   }
@@ -348,17 +356,17 @@ class StreamReducer extends StreamObserver {
   /**
    * Prepare an iterator which accepts the streams output as the
    * next param to a accumulators input. Once the `accumulator(input)`
-   * is able to meet the `recursiveCase` then the iterator completes
+   * is able to meet the `baseCase` then the iterator completes
    * and returns the reduction of all accumulated inputs thus far and
    * the process starts over upon the next input value from stream.
    */
   prepareIterator() {
-    let recursiveCase = isFunction( this.__recursiveCase) ? this.__recursiveCase : ()=>false;
+    let baseCase = this.__baseCase;
     let accumulator = this.__accumulator;
     
     const generator = function * accumulateTilRecursiveCase(baseValue) {
       let value = baseValue;
-      while (recursiveCase(value)) {
+      while (!baseCase(value)) {
         value = accumulator(value, yield);
       }
       

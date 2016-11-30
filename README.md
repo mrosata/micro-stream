@@ -1,16 +1,17 @@
 # MicroStream JS ![alt Travis CI test status](https://travis-ci.org/mrosata/micro-stream.svg?branch=master)
-The magic of streams, in a small package. **MicroStream JS** is a minimal implementation of a very powerful pattern. Streams are exciting, they can transform the ways by which we work with and think about data in our applications. If streams are new to your programs, they could require a shift in thinking, but one that I believe you will truly enjoy. Streams allow us as developers to become very expressive, as they provide an elegant solution of pairing the complexities found within event-driven or async driven logic, with the reliability of logic typically found in small utility methods or pure functions.
 
-Looking for more in-depth **MicroStream JS** information? Something specific in mind? Maybe you'd do better checking out [the API & Documentation Website for **MicroStream JS**][website].
+The magic of streams, in a small package. *MicroStream JS* is a minimal implementation of a very powerful pattern. Streams are exciting, they can transform the ways by which we work with and think about data in our applications. If streams are new to your programs, they could require a shift in thinking, but one that I believe you will truly enjoy. Streams allow us as developers to become very expressive, as they provide an elegant solution of pairing the complexities found within event-driven or async driven logic, with the reliability of logic typically found in small utility methods or pure functions.
+
+Looking for more in-depth *MicroStream JS* information? Something specific in mind? Maybe you'd do better checking out [the API & Documentation Website for *MicroStream JS*][website].
 
 
 &nbsp;
 
 Installation
 ----
-**MicroStream JS** is about ~4KB - 10KB over the wire gzipped, it comes packaged in all the popular module formats, eg: [UMD (Universal Module Definition)][umd-git-repo]. **MicroStream JS** should integrate easily into your projects using `import`, `require`, `define`, if your project supports it... we support you! 
+*MicroStream JS* is about ~4KB - 10KB over the wire gzipped, it comes packaged in all the popular module formats, eg: [UMD (Universal Module Definition)][umd-git-repo]. *MicroStream JS* should integrate easily into your projects using `import`, `require`, `define`, if your project supports it... we support you! 
 
-**MicroStream JS** installs super simple with ***yarn*** or ***npm***.
+*MicroStream JS* installs super simple with ***yarn*** or ***npm***.
 
 ```sh
 $ # Install using NPM
@@ -34,7 +35,7 @@ const microStream = require('micro-stream');
 define(['microStream'], function (microStream) {/*...code..*/});
 ```
 
-Now you will have access to the three Stream classes of "**MicroStream JS**". You could get away with only bringing the main `Stream` class into scope as it has access all three and will naturally transition into the proper Stream types as you need them. Additionally, you have access to the 3 class namespaces directly as well.
+Now you will have access to the three Stream classes of "*MicroStream JS*". You could get away with only bringing the main `Stream` class into scope as it has access all three and will naturally transition into the proper Stream types as you need them. Additionally, you have access to the 3 class namespaces directly as well. Remember to read [the API & Documentation for MicroStreamJS][website].
 
 ```javascript
 const { Stream, StreamObserver, StreamReducer } = microStream;
@@ -83,7 +84,7 @@ Examples
 ##### **Example #1**: 
 Let us setup a stream from all clicks on the HTML `"body"` element. Whenever there are subscribers to the stream, then it will "map" all DOM click events through any ops mapped to the stream (*"ops" === "functions"*). If there are no subscribers, then the events passed to `clickStream` are never applied to any ops. Rembemer, streams are lazy that way.
   
-After subscribing, optional filters can be added (The `filter` method stops unwanted values from continuing downstream. Using `filter` without an explicit filter op will stop `"undefined"` values by default). Below we'll collect the `event.pageX` value from each click, partially apply those values to a function that will multiply 3 numbers, if the number is over 5million, the app will throw an error and we'll fix that error using `.trap`. Take a look!  
+After subscribing, optional filters can be added (The `filter` method stops unwanted values from continuing downstream. Using `filter` without an explicit filter op will stop `"undefined"` and `null` values by default). Below we'll collect the `event.pageX` value from each click, partially apply those values to a function that will multiply 3 numbers, if the number is over 5million, the app will throw an error and we'll fix that error using `.trap`. Take a look!  
 
 ```javascript
 // Let's use the logger from above!
@@ -99,14 +100,17 @@ function iFixErrors(err) {
   console.error(err.message);
   return 4999999;
 }
-// First create some stream (fromEvent takes optional selector as param 2).
+
+/**
+* Now we'll create a stream using `fromEvent` which is a helper
+* for events. Your encouraged to roll your own DOM helpers though :)
+*/
 let clickStream = Stream.fromEvent('click')
   .path(['pageX'])
   .tap(logger('multiply'));
 
 // Remember to subscribe or no work gets done.
 clickStream.subscribe
-// block undefined values from streaming using filter.
   .filter()
   // curry will stop the flow of stream until all params are filled.
   .curry((a, b, c) => a * b * c)
@@ -141,8 +145,8 @@ $ yarn test:watch
 ```
 
 #### Todos
- - **Finish Writing Tests and Docs** (*StreamReducer needs tests*).
- - **Build some more cool examples** (*and test those too*).
+ - Build some more cool examples (*and test those too*).
+ - Most tests are written, but it would be nice to write some practical examples and test them as well.
 
 
 #### License

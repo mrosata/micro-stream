@@ -32,6 +32,25 @@ MockStreamUtil.prototype.getState = function (key = null) {
   return tmp[key];
 };
 
+/**
+ * Adds 1 to the passed in key.
+ * @param key
+ * @returns {Number}
+ */
+MockStreamUtil.prototype.increment = function (key) {
+  this.setState(key, this.getState(key) + 1);
+  return this.getState(key);
+};
+
+/**
+ * Subtracts 1 from the passed in key.
+ * @param key
+ * @returns {Number}
+ */
+MockStreamUtil.prototype.decrement = function (key) {
+  this.setState(key, this.getState(key) - 1);
+  return this.getState(key);
+};
 
 /**
  * Reset the value of state to {}.

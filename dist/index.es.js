@@ -337,7 +337,9 @@ var StreamObserver = function (_Stream) {
   _createClass(StreamObserver, [{
     key: "curry",
     value: function curry(baseFn) {
-      var recursiveCase = isFunction;
+      var baseCase = function baseCase(test) {
+        return !isFunction(test);
+      };
       var accumulator = function accumulator(fn, arg) {
         if (fn.length <= 1) {
           return fn(arg);
@@ -346,7 +348,7 @@ var StreamObserver = function (_Stream) {
       };
 
       var cancelFn = this.cancel.bind(this);
-      var streamObserver = new StreamReducer(cancelFn, accumulator, recursiveCase, baseFn);
+      var streamObserver = new StreamReducer(cancelFn, accumulator, baseCase, baseFn);
 
       this.observers.push(streamObserver);
       return streamObserver;
@@ -363,13 +365,15 @@ var StreamObserver = function (_Stream) {
   }, {
     key: "curried",
     value: function curried(baseFn) {
-      var recursiveCase = isFunction;
+      var baseCase = function baseCase(test) {
+        return !isFunction(test);
+      };
       var accumulator = function accumulator(fn, arg) {
         return fn.call(fn, arg);
       };
 
       var cancelFn = this.cancel.bind(this);
-      var streamObserver = new StreamReducer(cancelFn, accumulator, recursiveCase, baseFn);
+      var streamObserver = new StreamReducer(cancelFn, accumulator, baseCase, baseFn);
 
       this.observers.push(streamObserver);
       return streamObserver;
@@ -392,10 +396,10 @@ var StreamObserver = function (_Stream) {
       var accumulator = function accumulator(accum, item) {
         return item;
       };
-      var recursiveCase = function recursiveCase(val) {
-        return !filterFn(val);
+      var baseCase = function baseCase(val) {
+        return filterFn(val);
       };
-      var streamObserver = new StreamReducer(this.cancel.bind(this), accumulator, recursiveCase, null);
+      var streamObserver = new StreamReducer(this.cancel.bind(this), accumulator, baseCase, null);
 
       this.observers.push(streamObserver);
       return streamObserver;
@@ -404,28 +408,28 @@ var StreamObserver = function (_Stream) {
     key: "reduce",
     value: function reduce(accumulator) {
       var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var recursiveCase = arguments[2];
+      var baseCase = arguments[2];
 
       var observer = void 0,
-          _recursiveCase = void 0,
+          _baseCase = void 0,
           reducer = void 0;
 
-      if (!isFunction(recursiveCase)) {
+      if (!isFunction(baseCase)) {
         // This is going to do infinite folding, which means we will need a way
         // to get the values out from iterator without actually completing it.
         // So we'll create a new observer to receive each value everytime the
         // generator is ran.
         observer = new StreamObserver(this.cancel.bind(this), id);
-        _recursiveCase = function _recursiveCase(data) {
-          observer.push(data);return true;
+        _baseCase = function _baseCase(data) {
+          observer.push(data);return false;
         };
 
-        reducer = new StreamReducer(this.cancel.bind(this), accumulator, _recursiveCase, defaultValue);
+        reducer = new StreamReducer(this.cancel.bind(this), accumulator, _baseCase, defaultValue);
       } else {
-        // The other case (recursiveCase was defined by developer as a function),
+        // The other case (baseCase was defined by developer as a function),
         // The reducer and the observer are the same thing, once the generator
         // completes it will push the reduced value out and start again.
-        reducer = observer = new StreamReducer(this.cancel.bind(this), accumulator, recursiveCase, defaultValue);
+        reducer = observer = new StreamReducer(this.cancel.bind(this), accumulator, baseCase, defaultValue);
       }
 
       this.observers.push(reducer);
@@ -452,18 +456,20 @@ var StreamObserver = function (_Stream) {
       var rejectionHandler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id;
 
       var observer = new StreamObserver(this.cancel.bind(this), id);
-      var reducer = new StreamReducer(function () {
-        // Since we "thread the loop" here, we have 2 cancellations.
+
+      // Since we "thread the loop" here, we have 2 cancellations.
+      // cancel this
+      var cancellations = function cancellations() {
         observer.cancel.bind(observer);
-        // cancel this
         _this3.cancel.bind(_this3);
-      }, function (_, item) {
+      };
+      var reducer = new StreamReducer(cancellations, function (_, item) {
         var promise = promiseFactory(item);
-        promise.then(id).catch(rejectionHandler).then(observer.push.bind(observer));
+        promise.catch(rejectionHandler).then(observer.push.bind(observer));
         return promise;
       }, function () {
-        return true;
-      });
+        return false;
+      }); // ()=>false is baseCase (we want infinite loop)
 
       this.observers.push(reducer);
       return observer;
@@ -478,12 +484,21 @@ var StreamReducer = function (_StreamObserver) {
 
   _createClass(StreamReducer, null, [{
     key: "of",
-    value: function of(accumulator, recursiveCase, defaultValue) {
-      return new StreamReducer(null, accumulator, recursiveCase, defaultValue);
+    value: function of(accumulator, baseCase, defaultValue) {
+      return new StreamReducer(null, accumulator, baseCase, defaultValue);
     }
+
+    /**
+     *
+     * @param cancelStream
+     * @param accumulator
+     * @param baseCase - recursive-case basically, but when true recursion stops
+     * @param baseValue
+     */
+
   }]);
 
-  function StreamReducer(cancelStream, accumulator, recursiveCase) {
+  function StreamReducer(cancelStream, accumulator, baseCase) {
     var baseValue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 
     _classCallCheck(this, StreamReducer);
@@ -495,7 +510,9 @@ var StreamReducer = function (_StreamObserver) {
     _this4.observers = [];
     _this4.__type = STREAM_REDUCER;
     _this4.__accumulator = accumulator;
-    _this4.__recursiveCase = recursiveCase;
+    _this4.__baseCase = isFunction(baseCase) ? baseCase : function () {
+      return true;
+    };
     _this4.__baseValue = baseValue;
     _this4.prepareIterator();
     return _this4;
@@ -504,7 +521,7 @@ var StreamReducer = function (_StreamObserver) {
   /**
    * Prepare an iterator which accepts the streams output as the
    * next param to a accumulators input. Once the `accumulator(input)`
-   * is able to meet the `recursiveCase` then the iterator completes
+   * is able to meet the `baseCase` then the iterator completes
    * and returns the reduction of all accumulated inputs thus far and
    * the process starts over upon the next input value from stream.
    */
@@ -513,9 +530,7 @@ var StreamReducer = function (_StreamObserver) {
   _createClass(StreamReducer, [{
     key: "prepareIterator",
     value: function prepareIterator() {
-      var recursiveCase = isFunction(this.__recursiveCase) ? this.__recursiveCase : function () {
-        return false;
-      };
+      var baseCase = this.__baseCase;
       var accumulator = this.__accumulator;
 
       var generator = _regeneratorRuntime.mark(function accumulateTilRecursiveCase(baseValue) {
@@ -527,7 +542,7 @@ var StreamReducer = function (_StreamObserver) {
                 value = baseValue;
 
               case 1:
-                if (!recursiveCase(value)) {
+                if (baseCase(value)) {
                   _context.next = 9;
                   break;
                 }

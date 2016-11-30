@@ -22,6 +22,8 @@ describe('StreamObserver tests', function () {
     stream1 = Stream.of(null);
     stream2 = Stream.of(null);
     mockUtil = new MockStreamUtil();
+    mockUtil.setState('values', []);
+    mockUtil.setState('called', 0);
   });
   
   /**
@@ -74,25 +76,46 @@ describe('StreamObserver tests', function () {
   describe('Stream#map', function () {
     
     it('does not matter where the subscribe property is in relation to map.', function () {
-      mockUtil.setState('test', []);
       
       stream1
         .map(data => data * 2)
         .subscribe
         .map(data => data + 1000)
-        .map(data => mockUtil.pushState('test', data));
+        .map(data => mockUtil.pushState('values', data));
       
       stream2.subscribe
         .map(data => data * 2)
         .map(data => data + 1000)
-        .map(data => mockUtil.pushState('test', data));
+        .map(data => mockUtil.pushState('values', data));
       
       stream1.push(200);
       stream2.push(300);
-      expect(mockUtil.getState('test')).to.have.length(2);
-      expect(mockUtil.getState('test')).to.eql([1400, 1600])
+      expect(mockUtil.getState('values')).to.have.length(2);
+      expect(mockUtil.getState('values')).to.eql([1400, 1600])
     });
     
+  });
+  
+  
+  /**
+   * StreamObserver.as
+   */
+  describe('StreamObserver.as', function () {
+    
+    it('should work on the StreamObserver and pass "as" value.', function () {
+  
+      const observer = stream1.subscribe;
+      expect(observer.constructor).to.deep.equal(StreamObserver);
+      
+      observer.as('l:p')
+        .tap(data => {
+          mockUtil.pushState('values', data);
+        });
+      
+      stream1.push(1).push(null).push(undefined).push('hello');
+      
+      expect(mockUtil.getState('values')).to.eql(['l:p', 'l:p', 'l:p', 'l:p']);
+    });
   });
   
   
