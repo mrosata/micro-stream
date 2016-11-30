@@ -1,4 +1,4 @@
-/*global describe, it, before, beforeEach, after, afterEach */
+/*global describe, it, before, beforeEach, after, afterEach, Promise */
 import { Stream, StreamReducer } from '../src/index.js';
 import { expect } from 'chai';
 import { MockStreamUtil } from './mockStreamUtil.js';
@@ -68,7 +68,7 @@ describe('StreamReducer tests', function () {
       observer = stream1.subscribe;
       
       observer.map(x => x * 2)
-        .reduce((total, num) => total + num, 0)
+        .reduce(sum, 0)
         .tap(data => {
           mockUtil.pushState('values', data);
         });
@@ -110,7 +110,7 @@ describe('StreamReducer tests', function () {
             setTimeout(() => {
               mockUtil.increment('called');
               return resolve(`Got ${val}`);
-            }, 10);
+            }, 1);
           })
         })
         .tap(result => {
@@ -128,7 +128,7 @@ describe('StreamReducer tests', function () {
         });
   
         done();
-      }, 200);
+      }, 12);
     });
   });
   
