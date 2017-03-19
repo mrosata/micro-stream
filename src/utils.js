@@ -32,7 +32,7 @@ const docQueryHookEvent = (eventType, hook, selector ) => {
 
 function path(pathOfProps) {
   pathOfProps = [].concat(pathOfProps);
-  
+
   return function(obj) {
     return pathOfProps.reduce((accum, propName) => {
       return isObject(accum) ? accum[propName] : undefined;
@@ -51,20 +51,47 @@ function getCopy(subject) {
       }
       return items;
     }
-    
+
     // Dates
     if (subject.constructor === Date) {
       return new Date(subject.toISOString());
     }
-    
+
     // Regular Objects
     return Object.assign({}, subject);
   }
-  
+
   // Everything Else
   return subject;
 }
 
+
+function assert (assert, message) {
+  if (!assert) {
+    throw new Error(message);
+  }
+}
+
+function assertIsGenerator(testValue, msg='was expecting generator') {
+  return assert(
+    typeof testValue === "function" &&
+    testValue.constructor.toString().match(/generatorfunction/i),
+    msg
+  );
+}
+
+function assertIsNumber(testValue, msg='was expecting number') {
+  return assert(
+    typeof testValue === "number" && testValue > 0,
+    msg
+  );
+}
+
+function size (list) {
+  return !list ? 0 : list.length;
+}
+
+
 export {
-  path, id, is, isNot, isSomething, isFunction, isObject, inspect, docQueryHookEvent, getCopy
+  path, id, is, isNot, isSomething, isFunction, isObject, inspect, docQueryHookEvent, getCopy, assert, assertIsNumber, assertIsGenerator, size
 }
