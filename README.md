@@ -14,11 +14,11 @@ Installation
 *MicroStream JS* installs super simple with ***yarn*** or ***npm***.
 
 ```sh
+$ # Install Micro-Stream JS using Yarn.
+$ yarn add micro-stream
+
 $ # Install using NPM
 $ npm install micro-stream --save
-
-$ # Install Micro-Stream JS using Yarn.
-$ yarn add micro-stream --save
 ```
 
 If your using Webpack/Browserify/RequireJS, AMD or NodeJS then you should be all set to import the main Stream class in the same way which you'd import any other package.
