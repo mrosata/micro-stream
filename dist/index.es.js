@@ -201,15 +201,11 @@ var Stream = function () {
      * @param data {*}
      */
     value: function push(data) {
-      var _this = this;
-
       if (!this.__cancelled && this.observers.length > 0) {
-        (function () {
-          var _data = _this.__value(data);
-          _this.observers.map(function (obs) {
-            return obs.push(_data);
-          });
-        })();
+        var _data = this.__value(data);
+        this.observers.map(function (obs) {
+          return obs.push(_data);
+        });
       }
       return this;
     }
@@ -317,14 +313,14 @@ var StreamObserver = function (_Stream) {
   function StreamObserver(cancelStream, baseObservation) {
     _classCallCheck(this, StreamObserver);
 
-    var _this2 = _possibleConstructorReturn(this, (StreamObserver.__proto__ || _Object$getPrototypeOf(StreamObserver)).call(this, baseObservation));
+    var _this = _possibleConstructorReturn(this, (StreamObserver.__proto__ || _Object$getPrototypeOf(StreamObserver)).call(this, baseObservation));
 
-    _this2.__type = STREAM_OBSERVER;
-    _this2.observers = [];
-    _this2.cancelStream = cancelStream;
-    _this2.__value = baseObservation.bind(_this2);
-    _this2.__cancelled = false;
-    return _this2;
+    _this.__type = STREAM_OBSERVER;
+    _this.observers = [];
+    _this.cancelStream = cancelStream;
+    _this.__value = baseObservation.bind(_this);
+    _this.__cancelled = false;
+    return _this;
   }
 
   /**
@@ -451,7 +447,7 @@ var StreamObserver = function (_Stream) {
   }, {
     key: "async",
     value: function async(promiseFactory) {
-      var _this3 = this;
+      var _this2 = this;
 
       var rejectionHandler = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : id;
 
@@ -461,7 +457,7 @@ var StreamObserver = function (_Stream) {
       // cancel this
       var cancellations = function cancellations() {
         observer.cancel.bind(observer);
-        _this3.cancel.bind(_this3);
+        _this2.cancel.bind(_this2);
       };
       var reducer = new StreamReducer(cancellations, function (_, item) {
         var promise = promiseFactory(item);
@@ -505,17 +501,17 @@ var StreamReducer = function (_StreamObserver) {
 
     baseValue = isObject(baseValue) ? getCopy(baseValue) : baseValue;
 
-    var _this4 = _possibleConstructorReturn(this, (StreamReducer.__proto__ || _Object$getPrototypeOf(StreamReducer)).call(this, cancelStream, id));
+    var _this3 = _possibleConstructorReturn(this, (StreamReducer.__proto__ || _Object$getPrototypeOf(StreamReducer)).call(this, cancelStream, id));
 
-    _this4.observers = [];
-    _this4.__type = STREAM_REDUCER;
-    _this4.__accumulator = accumulator;
-    _this4.__baseCase = isFunction(baseCase) ? baseCase : function () {
+    _this3.observers = [];
+    _this3.__type = STREAM_REDUCER;
+    _this3.__accumulator = accumulator;
+    _this3.__baseCase = isFunction(baseCase) ? baseCase : function () {
       return true;
     };
-    _this4.__baseValue = baseValue;
-    _this4.prepareIterator();
-    return _this4;
+    _this3.__baseValue = baseValue;
+    _this3.prepareIterator();
+    return _this3;
   }
 
   /**
@@ -533,7 +529,7 @@ var StreamReducer = function (_StreamObserver) {
       var baseCase = this.__baseCase;
       var accumulator = this.__accumulator;
 
-      var generator = _regeneratorRuntime.mark(function accumulateTilRecursiveCase(baseValue) {
+      var generator = /*#__PURE__*/_regeneratorRuntime.mark(function accumulateTilRecursiveCase(baseValue) {
         var value;
         return _regeneratorRuntime.wrap(function accumulateTilRecursiveCase$(_context) {
           while (1) {
@@ -543,24 +539,25 @@ var StreamReducer = function (_StreamObserver) {
 
               case 1:
                 if (baseCase(value)) {
-                  _context.next = 9;
+                  _context.next = 10;
                   break;
                 }
 
-                _context.t0 = value;
-                _context.next = 5;
+                _context.t0 = accumulator;
+                _context.t1 = value;
+                _context.next = 6;
                 return;
 
-              case 5:
-                _context.t1 = _context.sent;
-                value = accumulator(_context.t0, _context.t1);
+              case 6:
+                _context.t2 = _context.sent;
+                value = (0, _context.t0)(_context.t1, _context.t2);
                 _context.next = 1;
                 break;
 
-              case 9:
+              case 10:
                 return _context.abrupt("return", value);
 
-              case 10:
+              case 11:
               case "end":
                 return _context.stop();
             }

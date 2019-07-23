@@ -9,7 +9,10 @@
   "contributors": [],
   "license": "MIT",
   "keywords": [
-    "functional", "reactive", "stream", "utility"
+    "functional",
+    "reactive",
+    "stream",
+    "utility"
   ],
   "main": "index.js",
   "jsnext:main": "index.es.js",
