@@ -1,11 +1,11 @@
 {
   "name": "micro-stream",
   "private": true,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Small Streams.. Powerful Streams.. MicroStream JS",
   "homepage": "https://mrosata.github.io/micro-stream/",
   "repository": "mrosata/micro-stream",
-  "author": "Michael Rosata <mrosata1984@gmail.com> (www.onethingsimple.com)",
+  "author": "Michael Rosata <michael.rosata@gmail.com> (www.onethingsimple.com)",
   "contributors": [],
   "license": "MIT",
   "keywords": [
@@ -18,49 +18,57 @@
   "jsnext:main": "index.es.js",
   "babel": {
     "presets": [
-      "latest",
-      "stage-0"
+      "@babel/preset-env"
     ],
     "plugins": [
-      "transform-runtime"
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          "absoluteRuntime": false,
+          "corejs": false,
+          "helpers": true,
+          "regenerator": true,
+          "useESModules": false
+        }
+      ]
     ]
+  },
+  "scripts": {
+    "lint": "eslint src test tools",
+    "test": "mocha --require @babel/register",
+    "test:watch": "mocha --require @babel/register --reporter min --watch",
+    "test:cover": "nyc npm run test",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "build": "node tools/build",
+    "prepare": "npm run build",
+    "publish:docs": "easystatic deploy docs --repo mrosata/micro-stream",
+    "start": "easystatic start docs"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-external-helpers": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "babel-eslint": "^7.2.3",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.6",
+    "del": "^5.0.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3",
+    "sinon": "^7.3.2"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
     "extends": "airbnb-base"
-  },
-  "dependencies": {
-    "babel-runtime": "^6.11.6"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.16.0",
-    "babel-core": "^6.17.0",
-    "babel-eslint": "^7.0.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-latest": "^6.16.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "babel-register": "^6.16.3",
-    "chai": "^4.0.0-canary.1",
-    "coveralls": "^3.0.5",
-    "del": "^2.2.2",
-    "eslint": "^3.8.0",
-    "eslint-config-airbnb-base": "^10.0.1",
-    "eslint-plugin-import": "^2.2.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^6.2.0",
-    "rollup": "^0.36.3",
-    "rollup-plugin-babel": "^2.6.1",
-    "sinon": "^2.0.0-pre.3"
-  },
-  "scripts": {
-    "lint": "eslint src test tools",
-    "test": "mocha --compilers js:babel-register",
-    "test:watch": "mocha --compilers js:babel-register --reporter min --watch",
-    "test:cover": "babel-node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "build": "node tools/build",
-    "prepublish": "npm run build",
-    "publish:docs": "easystatic deploy docs --repo mrosata/micro-stream",
-    "start": "easystatic start docs"
   }
 }
