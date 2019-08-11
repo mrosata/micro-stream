@@ -44,6 +44,9 @@
     "publish:docs": "easystatic deploy docs --repo mrosata/micro-stream",
     "start": "easystatic start docs"
   },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5"
+  },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
@@ -52,7 +55,6 @@
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
-    "@babel/runtime": "^7.5.5",
     "babel-eslint": "^7.2.3",
     "chai": "^4.2.0",
     "coveralls": "^3.0.6",

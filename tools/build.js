@@ -7,6 +7,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
+
 'use strict';
 
 const fs = require('fs');
@@ -20,10 +21,17 @@ let promise = Promise.resolve();
 // Clean up the output directory
 promise = promise.then(() => del(['dist/*']));
 
+function toCamelCase(str) {
+  return str.replace(
+    /(?:^\w|[A-Z]|\b\w)/g,
+    (letter, i) => (i === 0 ? letter.toLowerCase() : letter.toUpperCase()),
+  ).replace(/[\s-]+/g, '');
+}
+
 // Compile source code into a distributable format with Babel
 ['es', 'cjs', 'umd'].forEach((format) => {
   promise = promise.then(() => rollup.rollup({
-    entry: 'src/index.js',
+    input: 'src/index.js',
     external: Object.keys(pkg.dependencies),
     plugins: [babel(Object.assign(pkg.babel, {
       babelrc: false,
@@ -32,10 +40,12 @@ promise = promise.then(() => del(['dist/*']));
       presets: pkg.babel.presets.map(x => (x === 'latest' ? ['latest', { es2015: { modules: false } }] : x)),
     }))],
   }).then(bundle => bundle.write({
-    dest: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
-    format,
+    output: {
+      file: `dist/${format === 'cjs' ? 'index' : `index.${format}`}.js`,
+      format,
+      name: format === 'umd' ? toCamelCase(pkg.name) : undefined,
+    },
     sourceMap: true,
-    moduleName: format === 'umd' ? toCamelCase(pkg.name) : undefined,
   })));
 });
 
@@ -53,10 +63,3 @@ promise = promise.then(() => {
 
 promise.catch(err => console.error(err.stack)); // eslint-disable-line no-console
 
-
-
-function toCamelCase(str) {
-  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-    return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-  }).replace(/[\s-]+/g, '');
-}
